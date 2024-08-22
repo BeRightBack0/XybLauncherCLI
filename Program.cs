@@ -2,19 +2,36 @@
 using Newtonsoft.Json;
 using Spectre.Console;
 using System.Net;
+using System.Threading.Tasks;
+using static Terminal.Gui.Graphs.PathAnnotation;
 
 namespace ChannelLauncher;
 
 public static class Program
 {
+
+    private static string selectedSeason = null;
     public static async Task Main(string[] args)
     {
         Console.Title = "XYB Launcher CLI";
 
+
+
         AnsiConsole.MarkupLine("Welcome, " + Environment.UserName + ", to the [underline blue]XYB Launcher CLI.[/]");
         AnsiConsole.MarkupLine("You can select an option using the arrow keys [underline blue]UP[/] and [underline blue]DOWN.[/]");
 
+        if (!string.IsNullOrEmpty(selectedSeason))
+        {
+            Console.WriteLine($"[Selected Season: {selectedSeason}]");
+        }
+        else
+        {
+            Console.WriteLine("[No Season Selected]");
+        }
+
         string appdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher";
+
+        string versionsdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher/versions.json";
 
 
         if (!Directory.Exists(appdata))
@@ -144,7 +161,7 @@ public static class Program
                 AnsiConsole.MarkupLine("Starting the Server");
                 break;
 
-                //Change Password Phase
+            //Change Password Phase
 
             case "Change Fortnite Path":
                 AnsiConsole.MarkupLine("Please enter the path to your fortnite folder");
@@ -203,8 +220,38 @@ public static class Program
                 Main(args);
                 break;
 
+
+            case "Select Fortnite Version":
+                string selectedVersion = SelectFortniteVersion(versionsdata);
+                if (selectedVersion != null)
+                {
+                    Console.WriteLine($"You selected: {selectedVersion}");
+                }
+
+                break;
+        }
+    }
+
+    static string SelectFortniteVersion(string versionsdata)
+    {
+        string[] lines = File.ReadAllLines(versionsdata);
+        Console.WriteLine("\n--- Available Fortnite Versions ---");
+        for (int i = 0; i < lines.Length; i++)
+        {
+            Console.WriteLine($"{i + 1}. {lines[i]}");
         }
 
-        Console.ReadKey(true);
+        Console.Write("Select a version by number: ");
+        if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= lines.Length)
+        {
+            return lines[index - 1];
+        }
+        else
+        {
+            Console.WriteLine("Invalid selection.");
+            return null;
+        }
     }
 }
+
+
