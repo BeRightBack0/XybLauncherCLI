@@ -11,6 +11,8 @@ public static class Program
 {
 
     private static string selectedSeason = null;
+    private static string selectedSeasonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "selectedSeason.txt");
+
     public static async Task Main(string[] args)
     {
         Console.Title = "XYB Launcher CLI";
@@ -222,12 +224,17 @@ public static class Program
 
 
             case "Select Fortnite Version":
-                string selectedVersion = SelectFortniteVersion(versionsdata);
-                if (selectedVersion != null)
+                selectedSeason = SelectFortniteVersion(versionsdata);
+                if (selectedSeason != null)
                 {
-                    Console.WriteLine($"You selected: {selectedVersion}");
+                    Console.WriteLine($"You selected: {selectedSeason}");
                 }
-
+                else
+                {
+                    Console.WriteLine("No season selected.");
+                }
+                AnsiConsole.Clear();
+                Main(args);
                 break;
         }
     }
