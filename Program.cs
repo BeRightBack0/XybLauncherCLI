@@ -10,30 +10,39 @@ namespace ChannelLauncher;
 public static class Program
 {
 
+
+    //Variables
+
+    //Variables for Season Selection 
     private static string selectedSeason = null;
     private static string selectedSeasonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "selectedSeason.txt");
+    private static string selectedPath = null;
+
+
 
     public static async Task Main(string[] args)
     {
+        //Variables
+        string appdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher";
+        string versionsdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher/versions.json";
+
+
+
         Console.Title = "XYB Launcher CLI";
-
-
-
+        LoadSelectedSeason();
         AnsiConsole.MarkupLine("Welcome, " + Environment.UserName + ", to the [underline blue]XYB Launcher CLI.[/]");
         AnsiConsole.MarkupLine("You can select an option using the arrow keys [underline blue]UP[/] and [underline blue]DOWN.[/]");
 
-        if (!string.IsNullOrEmpty(selectedSeason))
+        // Display the selected season and path if available
+        if (!string.IsNullOrEmpty(selectedSeason) && !string.IsNullOrEmpty(selectedPath))
         {
-            Console.WriteLine($"[Selected Season: {selectedSeason}]");
+            Console.WriteLine($"[Selected: Season: {selectedSeason} Path: {selectedPath}]");
         }
         else
         {
             Console.WriteLine("[No Season Selected]");
         }
 
-        string appdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher";
-
-        string versionsdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher/versions.json";
 
 
         if (!Directory.Exists(appdata))
@@ -224,10 +233,15 @@ public static class Program
 
 
             case "Select Fortnite Version":
-                selectedSeason = SelectFortniteVersion(versionsdata);
-                if (selectedSeason != null)
+                string selected = SelectFortniteVersion(versionsdata);
+                if (selected != null)
                 {
-                    Console.WriteLine($"You selected: {selectedSeason}");
+                    // Split the selected line into season and path
+                    var parts = selected.Split(new[] { ' ' }, 2);
+                    selectedSeason = parts[0];
+                    selectedPath = parts[1];
+                    SaveSelectedSeason(); // Save the selected season and path
+                    Console.WriteLine($"You selected: Season: {selectedSeason} Path: {selectedPath}");
                 }
                 else
                 {
@@ -257,6 +271,27 @@ public static class Program
         {
             Console.WriteLine("Invalid selection.");
             return null;
+        }
+    }
+
+    static void SaveSelectedSeason()
+    {
+        // Save the selected season and path to a file
+        File.WriteAllText(selectedSeasonFilePath, $"{selectedSeason} {selectedPath}");
+    }
+
+
+    static void LoadSelectedSeason()
+    {
+        // Load the selected season and path from a file if it exists
+        if (File.Exists(selectedSeasonFilePath))
+        {
+            string[] parts = File.ReadAllText(selectedSeasonFilePath).Split(new[] { ' ' }, 2);
+            if (parts.Length == 2)
+            {
+                selectedSeason = parts[0];
+                selectedPath = parts[1];
+            }
         }
     }
 }
