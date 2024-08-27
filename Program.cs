@@ -29,15 +29,26 @@ public static class Program
         string appdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher";
         string versionsdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher/versions.json";
 
-
-
         Console.Title = "XYB Launcher CLI";
-        LoadSelectedSeason();
-        AnsiConsole.MarkupLine("Welcome, " + Environment.UserName + ", to the [underline blue]XYB Launcher CLI.[/]");
-        AnsiConsole.MarkupLine("You can select an option using the arrow keys [underline blue]UP[/] and [underline blue]DOWN.[/]");
 
-        // Display the selected season and path if available
-        DisplaySelectedSeason();
+
+        AnsiConsole.Clear();
+
+
+        AnsiConsole.Write(
+            new FigletText("XYB Launcher CLI")
+                .Centered()
+                .Color(Color.Blue)
+        );
+
+        AnsiConsole.Write(new Rule("[blue]Welcome to XYB Launcher CLI[/]").Centered());
+        AnsiConsole.MarkupLine($"[bold yellow]Welcome, {Environment.UserName}, to the [underline blue]XYB Launcher CLI[/].[/]");
+        AnsiConsole.MarkupLine("Use the arrow keys [underline blue]UP[/] and [underline blue]DOWN[/] to navigate through the options.");
+
+        VersionHandler.LoadSelectedSeason();
+        VersionHandler.DisplaySelectedSeason();
+
+
 
 
 
@@ -211,147 +222,22 @@ public static class Program
                 break;
 
             case "Add Fortnite Version":
-                AddFortniteVersion();
+                VersionHandler.AddFortniteVersion();
                 AnsiConsole.Clear();
                 Main(args);
                 break;
 
 
             case "Select Fortnite Version":
-                SelectFortniteVersion();
+                VersionHandler.SelectFortniteVersion();
                 AnsiConsole.Clear();
                 Main(args);
                 break;
         }
     }
 
-    static void SaveSelectedSeason()
-    {
-        // Save the selected season and path to a file
-        File.WriteAllText(selectedSeasonFilePath, $"{selectedSeason} {selectedPath}");
-    }
 
 
-    static void LoadSelectedSeason()
-    {
-        // Load the selected season and path from a file if it exists
-        if (File.Exists(selectedSeasonFilePath))
-        {
-            string[] parts = File.ReadAllText(selectedSeasonFilePath).Split(new[] { ' ' }, 2);
-            if (parts.Length == 2)
-            {
-                selectedSeason = parts[0];
-                selectedPath = parts[1];
-            }
-        }
-    }
-
-
-
-    static void AddFortniteVersion()
-    {
-        Console.WriteLine("Adding a new Fortnite version...");
-
-        // Get the path and season from the user
-        Console.Write("Enter Fortnite path: ");
-        string fortnitePath = Console.ReadLine();
-
-        Console.Write("Enter Fortnite season: ");
-        string fortniteSeason = Console.ReadLine();
-
-        // Create a new FortniteVersion object
-        var newVersion = new FortniteVersion
-        {
-            Season = fortniteSeason,
-            Path = fortnitePath
-        };
-
-        // Load existing data or create new structure
-        FortniteVersions data;
-        if (File.Exists(versionsdata))
-        {
-            // Read existing JSON data from the file
-             var jsonData = File.ReadAllText(versionsdata);
-            // Deserialize JSON data into FortniteVersions object
-            data = JsonConvert.DeserializeObject<FortniteVersions>(jsonData) ?? new FortniteVersions();
-        }
-        else
-        {
-            // If the file doesn't exist, create a new FortniteVersions object
-            data = new FortniteVersions();
-        }
-
-        // Add the new version to the list of versions
-        data.Versions.Add(newVersion);
-
-        // Serialize the updated data back to JSON
-        var updatedJson = JsonConvert.SerializeObject(data, Formatting.Indented);
-
-        // Write the updated JSON data back to the file
-        File.WriteAllText(versionsdata, updatedJson);
-
-        Console.WriteLine("Fortnite version added successfully!");
-    }
-
-
-
-    static void SelectFortniteVersion()
-    {
-        // Check if the file exists
-        if (!File.Exists(versionsdata))
-        {
-            Console.WriteLine("No versions found. Please add a version first.");
-            return;
-        }
-
-        FortniteVersions data;
-
-        try
-        {
-            // Read the JSON file
-            var jsonData = File.ReadAllText(versionsdata);
-
-            // Deserialize the JSON data into the FortniteVersions object
-            data = JsonConvert.DeserializeObject<FortniteVersions>(jsonData);
-
-            if (data == null || data.Versions.Count == 0)
-            {
-                Console.WriteLine("No versions found in the file.");
-                return;
-            }
-
-            // Display all versions
-            Console.WriteLine("\n--- Available Fortnite Versions ---");
-            for (int i = 0; i < data.Versions.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. Version: {data.Versions[i].Season} Path: {data.Versions[i].Path}");
-            }
-
-            // Select a version
-            Console.Write("Select a version by number: ");
-            if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= data.Versions.Count)
-            {
-                // Mark the selected version
-                var selectedVersion = data.Versions[index - 1];
-                data.Selected = selectedVersion.Season;
-
-                // Serialize the updated data back to JSON
-
-                var updatedJson = JsonConvert.SerializeObject(data, Formatting.Indented);
-                File.WriteAllText(versionsdata, updatedJson);
-
-                Console.WriteLine($"Selected Version: Season {selectedVersion.Season}, Path: {selectedVersion.Path}");
-            }
-            else
-            {
-                Console.WriteLine("Invalid selection.");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error reading or writing JSON data: {ex.Message}");
-        }
-    }
 
    
 }

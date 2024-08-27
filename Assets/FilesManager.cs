@@ -7,5 +7,13 @@ using Newtonsoft.Json;
 
 namespace ChannelLauncher.Assets
 {
+    public class FilesManager
+    {
+        //Function to Make Progress Bar While Downloading A Fortnite Build
 
+
+
+
+
+    }
 }

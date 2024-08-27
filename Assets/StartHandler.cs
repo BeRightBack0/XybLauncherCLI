@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChannelLauncher.Assets
+namespace ChannelLauncher
 {
-    internal class Server
+    internal class StartHandler
     {
     }
 }
