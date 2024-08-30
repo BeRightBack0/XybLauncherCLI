@@ -4,8 +4,11 @@ using Spectre.Console;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using static Terminal.Gui.Graphs.PathAnnotation;
+using static ChannelLauncher.FilesManager;
+using static ChannelLauncher.StartHandler;
+using System.Net.Http;
+using System.Text.Json.Serialization;
 
 namespace ChannelLauncher;
 
@@ -61,10 +64,10 @@ public static class Program
         var option = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[blue]What do you want to do[/]?")
-                .PageSize(5)
+                .PageSize(6)
                 .AddChoices(new[]
                 {
-                    "Start Client", "Add Fortnite Version", "Select Fortnite Version",  "Change Fortnite Path","Change Account Info", "Exit"
+                    "Start Client", "Add Fortnite Version", "Select Fortnite Version",  "Download Build", "Change Account Info", "Exit",
                 }));
 
         switch (option)
@@ -202,9 +205,9 @@ public static class Program
                 }
                 break;
 
-            case "Exit":
-                Environment.Exit(1);
-                break;
+            //case "Exit":
+               // Environment.Exit(1);
+               // break;
 
 
             case "Change Account Info":
@@ -232,6 +235,47 @@ public static class Program
                 VersionHandler.SelectFortniteVersion();
                 AnsiConsole.Clear();
                 Main(args);
+                break;
+
+            case "Download Build":
+                try
+                {
+                    Console.WriteLine("Starting DownloadBuild process...");
+
+                    // Instantiate FilesManager
+                    FilesManager filesManager = new FilesManager();
+
+
+                    // Call the main logic method in FilesManager
+                    await filesManager.HandleActionAsync("DownloadBuild");
+
+                    // Log after the method call
+                    Console.WriteLine("HandleActionAsync completed.");
+
+                    // Indicate that the process has completed
+                    Console.WriteLine("Download completed successfully. Press Enter to exit.");
+                }
+                catch (Exception ex)
+                {
+                    // Log any exceptions that occur
+                    Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                }
+                finally
+                {
+                    // Keep the console window open
+                    Console.ReadLine();
+                }
+                break;
+
+
+
+
+
+            case "Exit":
+                AnsiConsole.Clear();
+                var startHandler = new StartHandler();
+                startHandler.ReadSelectedVersionPath(versionsdata);
+
                 break;
         }
     }
