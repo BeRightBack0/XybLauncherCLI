@@ -273,8 +273,8 @@ public static class Program
 
             case "Exit":
                 AnsiConsole.Clear();
-                var startHandler = new StartHandler();
-                startHandler.ReadSelectedVersionPath(versionsdata);
+                ChannelLauncher.StartHandler.RunFortnite();
+
 
                 break;
         }

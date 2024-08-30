@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using Spectre.Console;
 
 namespace MomentumLauncher;
-//TODO Add Better Version Check Pls 
 public class Utilities
 {
 
