@@ -5,3 +5,4 @@
 - [ ] Account System
 - [x] Version Select System
 - [ ] Custom DLL Inject Support
+- [ ] Server Hosting Support
