@@ -5,10 +5,10 @@ using System.Net.Quic;
 using System.Text;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using static ChannelLauncher.VersionHandler;
+using static XybLauncher.VersionHandler;
 
 //TODO Name it better and tranfer all function for versions selection and handling here ok and downloading builds herre ok ok ok
-namespace ChannelLauncher;
+namespace XybLauncher;
 
 internal class VersionHandler
 {

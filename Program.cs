@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using static Terminal.Gui.Graphs.PathAnnotation;
-using static ChannelLauncher.FilesManager;
-using static ChannelLauncher.StartHandler;
+using static XybLauncher.FilesManager;
+using static XybLauncher.StartHandler;
 using System.Net.Http;
 using System.Text.Json.Serialization;
 
-namespace ChannelLauncher;
+namespace XybLauncher;
 
 public static class Program
 {
@@ -74,56 +74,8 @@ public static class Program
         {
             // Client Phase
             case "Start Client":
-
-                if (!File.Exists(appdata + "\\path.txt"))
-                {
-                    Console.Clear();
-                    AnsiConsole.MarkupLine("[red]Fortnite path is missing, please set it first![/]");
-                    Main(args);
-                }
-
-                if (!File.Exists(appdata + "\\email.txt") || !File.Exists(appdata + "\\password.txt"))
-                {
-                    Console.Clear();
-                    AnsiConsole.MarkupLine("[red]Please Enter Your Email and Password! (Account Made From Discord Bot.)[/]");
-
-                    Console.Write("Email: ");
-                    string clientemail = Console.ReadLine();
-                    File.WriteAllText(appdata + "\\email.txt", clientemail);
-
-                    Console.Write("Password: ");
-                    string clientpassword = Console.ReadLine();
-                    File.WriteAllText(appdata + "\\password.txt", clientpassword);
-
-                    AnsiConsole.MarkupLine("[green]Email and Password Saved![/]");
-                }
-
-                if (!File.Exists("redirect.json"))
-                {
-                    string fileContent = "{ \"name\": \"Cobalt.dll\", \"download\": \"https://www.dropbox.com/scl/fi/m996mhjy77qn2t3bfxq6l/Cobalt.dll?rlkey=6araxm5ngyznp4fmvxqtgm9a7&st=fo0dke5u&dl=1\" }";
-                    File.WriteAllText("redirect.json", fileContent);
-                }
-
-                string fileData = File.ReadAllText("redirect.json");
-
-                var jsonData = JsonConvert.DeserializeObject<Dictionary<string, object>>(fileData);
-
-                if (!jsonData.TryGetValue("name", out var dllNameObject) || !(dllNameObject is string dllName))
-                {
-                    throw new Exception("Invalid JSON structure: 'name' key is missing or not a string");
-                }
-
-                if (!jsonData.TryGetValue("download", out var dllDownloadObject) || !(dllDownloadObject is string dllDownload))
-                {
-                    throw new Exception("Invalid JSON structure: 'download' key is missing or not a string");
-                }
-
-                if (!dllName.EndsWith(".dll"))
-                {
-                    dllName += ".dll";
-                }
-
-                MomentumLauncher.Utilities.StartGame(File.ReadAllText(appdata + "\\path.txt"), dllDownload, dllName);
+                AnsiConsole.Clear();
+                XybLauncher.StartHandler.RunFortnite();
                 AnsiConsole.MarkupLine("Starting the client");
                 break;
 
@@ -178,7 +130,7 @@ public static class Program
                     serverDllName += ".dll";
                 }
 
-                MomentumLauncher.Utilities.StartServer(File.ReadAllText(appdata + "\\path.txt"), serverDllDownload, serverDllName);
+                XybLauncher.Utilities.StartServer(File.ReadAllText(appdata + "\\path.txt"), serverDllDownload, serverDllName);
                 AnsiConsole.MarkupLine("Starting the Server");
                 break;
 
@@ -272,8 +224,7 @@ public static class Program
 
 
             case "Exit":
-                AnsiConsole.Clear();
-                ChannelLauncher.StartHandler.RunFortnite();
+                Environment.Exit(0);
 
 
                 break;

@@ -4,7 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Spectre.Console;
 
-namespace MomentumLauncher;
+namespace XybLauncher;
 public class Utilities
 {
 
@@ -57,7 +57,7 @@ public class Utilities
 
 
         shipping.Start();
-        MomentumLauncher.Injector.Inject(shipping.Id, appdata + "\\" + dllName);
+        XybLauncher.Injector.Inject(shipping.Id, appdata + "\\" + dllName);
 
 
 
@@ -114,7 +114,7 @@ public class Utilities
         Process[] processes = Process.GetProcessesByName("FortniteClient-Win64-Shipping");
         if (processes.Length > 0)
         {
-            MomentumLauncher.Injector.Inject(processes[0].Id, appdata + "\\" + dllName);
+            XybLauncher.Injector.Inject(processes[0].Id, appdata + "\\" + dllName);
         }
 
 

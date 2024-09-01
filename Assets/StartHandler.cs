@@ -10,14 +10,14 @@ using Spectre.Console;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static Terminal.Gui.Graphs.PathAnnotation;
-using static ChannelLauncher.Program;
+using static XybLauncher.Program;
 using System.Net.Http;
 using System.Text.Json.Serialization;
 
 
 
 
-namespace ChannelLauncher
+namespace XybLauncher
 {
     public class StartHandler
     {
@@ -71,8 +71,8 @@ namespace ChannelLauncher
                 await DownloadFileAsync("https://www.dropbox.com/scl/fi/g9zq6w1xauufioes2zb4j/FortniteLauncher.exe?rlkey=7u5ib9b0swplxiz3phg6wcae6&st=ct93lwhm&dl=1", gamePath + "\\FortniteGame\\Binaries\\Win64\\FortniteLauncher.exe");
             if (!File.Exists(appdata + "\\" + dllName))
                 await DownloadFileAsync(dllDownload, appdata + "\\" + dllName);
-            string emailPath = Path.Combine(appdata, "email.txt");
-            string passwordPath = Path.Combine(appdata, "password.txt");
+            string emailPath = Path.Combine(appdata, "serveremail.txt");
+            string passwordPath = Path.Combine(appdata, "serverpassword.txt");
             string email = File.ReadAllText(emailPath);
             string password = File.ReadAllText(passwordPath);
             string launcherexePath = gamePath + "\\FortniteGame\\Binaries\\Win64\\FortniteLauncherPatch.exe";
@@ -96,7 +96,7 @@ namespace ChannelLauncher
             //  MomentumLauncher.Injector.Inject(processes[0].Id, appdata + "\\" + dllName);
             // }
             shipping.Start();
-            MomentumLauncher.Injector.Inject(shipping.Id, appdata + "\\" + dllName);
+            XybLauncher.Injector.Inject(shipping.Id, appdata + "\\" + dllName);
             Environment.Exit(0);
         }
 

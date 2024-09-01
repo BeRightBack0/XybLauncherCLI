@@ -12,7 +12,7 @@ using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.Zip;
 
-namespace ChannelLauncher
+namespace XybLauncher
 {
     public class FilesManager
     {
