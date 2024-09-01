@@ -4,6 +4,12 @@
 ![License](https://img.shields.io/github/license/BeRightBack0/XybLauncherCLI)
 
 
+XybLauncherCLI Comamand Line Interface version of XybLauncher (WIP) that offers downloading builds from launcher great version selector and while being lightweight.
+
+Most features arent implemented yet, they are being worked on, they will be ready soon
+
+
+
 # Installation
 Go to Releases and choose .msi installer or .zip 
 then just install using .msi or extract .zip archive.
