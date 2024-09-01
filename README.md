@@ -28,4 +28,4 @@ then just install using .msi or extract .zip archive.
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=BeRightBack0/XybLauncherCLI&type=Date)](https://star-history.com/#simplyzetax/Aphrodite&Date)
+![Star History Chart](https://api.star-history.com/svg?repos=BeRightBack0/XybLauncherCLI&type=Date)
