@@ -24,6 +24,7 @@ then just install using .msi or extract .zip archive.
 - [ ] Server Hosting Support
 - [ ] Maybe Pak Files Mounting
 - [ ] UI Interface (later)
+- [ ] Custom Server DLL Support
 
 
 ## Star History
