@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/github/license/BeRightBack0/XybLauncherCLI)
 
 
-XybLauncherCLI Comamand Line Interface version of XybLauncher (WIP) that offers downloading builds from launcher great version selector and while being lightweight.
+XybLauncherCLI Is a OG Fortnite Launcher ,a its Comamand Line Interface version of XybLauncher (WIP) that offers downloading builds from launcher great version selector and while being lightweight.
 
 Most features arent implemented yet, they are being worked on, they will be ready soon
 
