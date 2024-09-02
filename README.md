@@ -16,6 +16,10 @@ then just install using .msi or extract .zip archive.
 
 
 
+## Compatibility
+Tested up to 8.51
+
+
 ## Feature List TODO
 - [x] Download Build in Launcher
 - [ ] Account System
