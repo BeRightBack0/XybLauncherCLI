@@ -8,7 +8,7 @@
         <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
         <ApplicationIcon>mainicon.ico</ApplicationIcon>
         <AssemblyName>XybLauncherCLI</AssemblyName>
-        <RootNamespace>ChannelLauncher</RootNamespace>
+        <RootNamespace>XybLauncher</RootNamespace>
         <PlatformTarget>AnyCPU</PlatformTarget>
 		<Version>0.0.3</Version>
     </PropertyGroup>

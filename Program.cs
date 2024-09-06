@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using static Terminal.Gui.Graphs.PathAnnotation;
 using static XybLauncher.FilesManager;
 using static XybLauncher.StartHandler;
+using static XybLauncher.AccountHandler;
 using System.Net.Http;
 using System.Text.Json.Serialization;
 
@@ -50,6 +51,7 @@ public static class Program
 
         VersionHandler.LoadSelectedSeason();
         VersionHandler.DisplaySelectedSeason();
+        AccountHandler.ShowSelectedAccount();
 
 
 
@@ -67,7 +69,7 @@ public static class Program
                 .PageSize(6)
                 .AddChoices(new[]
                 {
-                    "Start Client", "Add Fortnite Version", "Select Fortnite Version",  "Download Build", "Change Account Info", "Exit",
+                    "Start Client" ,"Start Server", "Add Fortnite Version", "Select Fortnite Version",  "Download Build", "Account Manager", "Exit",
                 }));
 
         switch (option)
@@ -81,57 +83,11 @@ public static class Program
 
             // Server Phase
             case "Start Server":
+                AnsiConsole.Clear();
+                XybLauncher.ServerHandler.RunFortniteServer();
 
-                if (!File.Exists(appdata + "\\path.txt"))
-                {
-                    Console.Clear();
-                    AnsiConsole.MarkupLine("[red]Fortnite path is missing, please set it first![/]");
-                    Main(args);
-                }
-
-                if (!File.Exists(appdata + "\\serveremail.txt") || !File.Exists(appdata + "\\serverpassword.txt"))
-                {
-                    Console.Clear();
-                    AnsiConsole.MarkupLine("[red]Please Enter Your Server Email and Server Password! (Account Made From Discord Bot.)[/]");
-
-                    Console.Write("Server Email: ");
-                    string serveremail = Console.ReadLine();
-                    File.WriteAllText(appdata + "\\serveremail.txt", serveremail);
-
-                    Console.Write("Server Password: ");
-                    string serverpassword = Console.ReadLine();
-                    File.WriteAllText(appdata + "\\serverpassword.txt", serverpassword);
-
-                    AnsiConsole.MarkupLine("[green] Server Email and Password Saved![/]");
-                }
-
-                if (!File.Exists("redirect.json"))
-                {
-                    string fileContent = "{ \"name\": \"Cobalt.dll\", \"download\": \"https://www.dropbox.com/scl/fi/m996mhjy77qn2t3bfxq6l/Cobalt.dll?rlkey=6araxm5ngyznp4fmvxqtgm9a7&st=fo0dke5u&dl=1\" }";
-                    File.WriteAllText("redirect.json", fileContent);
-                }
-
-                string serverFileData = File.ReadAllText("redirect.json");
-
-                var serverJsonData = JsonConvert.DeserializeObject<Dictionary<string, object>>(serverFileData);
-
-                if (!serverJsonData.TryGetValue("name", out var serverDllNameObject) || !(serverDllNameObject is string serverDllName))
-                {
-                    throw new Exception("Invalid JSON structure: 'name' key is missing or not a string");
-                }
-
-                if (!serverJsonData.TryGetValue("download", out var serverDllDownloadObject) || !(serverDllDownloadObject is string serverDllDownload))
-                {
-                    throw new Exception("Invalid JSON structure: 'download' key is missing or not a string");
-                }
-
-                if (!serverDllName.EndsWith(".dll"))
-                {
-                    serverDllName += ".dll";
-                }
-
-                XybLauncher.Utilities.StartServer(File.ReadAllText(appdata + "\\path.txt"), serverDllDownload, serverDllName);
                 AnsiConsole.MarkupLine("Starting the Server");
+                Console.ReadLine();
                 break;
 
             //Change Password Phase
@@ -221,7 +177,10 @@ public static class Program
 
 
 
+            case "Account Manager":
+                AccountHandler.StartAccountManager();
 
+            break;
 
             case "Exit":
                 Environment.Exit(0);
@@ -233,8 +192,13 @@ public static class Program
 
 
 
+    public static void MainMenu()
+    {
+        Program.Main(new string[0]);
+    }
 
-   
+
+
 }
 
 

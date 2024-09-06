@@ -6,6 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using static XybLauncher.VersionHandler;
+using Spectre.Console;
 
 //TODO Name it better and tranfer all function for versions selection and handling here ok and downloading builds herre ok ok ok
 namespace XybLauncher;
@@ -27,7 +28,7 @@ internal class VersionHandler
 
     public class FortniteVersions
     {
-        public string Selected { get; set; }    
+        public string Selected { get; set; }
 
         public List<FortniteVersion> Versions { get; set; } = new List<FortniteVersion>();
     }
@@ -56,7 +57,7 @@ internal class VersionHandler
             // Check if there is a selected season
             if (!string.IsNullOrEmpty(data.Selected))
             {
-                Console.WriteLine($"Selected Version: {data.Selected}");
+                Console.WriteLine($"Selected Version: [bold green]{data.Selected}[/]");
             }
             else
             {
@@ -209,24 +210,6 @@ internal class VersionHandler
         // Save the selected season and path to a file
         File.WriteAllText(selectedSeasonFilePath, $"{selectedSeason} {selectedPath}");
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

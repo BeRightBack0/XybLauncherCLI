@@ -71,20 +71,27 @@ namespace XybLauncher
                 await DownloadFileAsync("https://www.dropbox.com/scl/fi/g9zq6w1xauufioes2zb4j/FortniteLauncher.exe?rlkey=7u5ib9b0swplxiz3phg6wcae6&st=ct93lwhm&dl=1", gamePath + "\\FortniteGame\\Binaries\\Win64\\FortniteLauncher.exe");
             if (!File.Exists(appdata + "\\" + dllName))
                 await DownloadFileAsync(dllDownload, appdata + "\\" + dllName);
-            string emailPath = Path.Combine(appdata, "serveremail.txt");
-            string passwordPath = Path.Combine(appdata, "serverpassword.txt");
+
+
+            //Loading V1 Account System
+            string emailPath = Path.Combine(appdata, "email.txt");
+            string passwordPath = Path.Combine(appdata, "password.txt");
+
             string email = File.ReadAllText(emailPath);
             string password = File.ReadAllText(passwordPath);
+
+
             string launcherexePath = gamePath + "\\FortniteGame\\Binaries\\Win64\\FortniteLauncherPatch.exe";
             Process launcher = new Process();
             launcher.StartInfo.FileName = launcherexePath;
             launcher.StartInfo.WorkingDirectory = Path.GetDirectoryName(launcherexePath);
             launcher.StartInfo.Arguments = $" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -skippatchcheck -nobe -fromfl=eac -fltoken=3db3ba5dcbd2e16703f3978d -nosplash -caldera=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiYmU5ZGE1YzJmYmVhNDQwN2IyZjQwZWJhYWQ4NTlhZDQiLCJnZW5lcmF0ZWQiOjE2Mzg3MTcyNzgsImNhbGRlcmFHdWlkIjoiMzgxMGI4NjMtMmE2NS00NDU3LTliNTgtNGRhYjNiNDgyYTg2IiwiYWNQcm92aWRlciI6IkVhc3lBbnRpQ2hlYXQiLCJub3RlcyI6IiIsImZhbGxiYWNrIjpmYWxzZX0.VAWQB67RTxhiWOxx7DBjnzDnXyyEnX7OljJm-j2d88G_WgwQ9wrE6lwMEHZHjBd1ISJdUO1UVUqkfLdU5nofBQ -AUTH_LOGIN={email} -AUTH_PASSWORD={password} -AUTH_TYPE=epic";
-            Process shippingbe = new Process();
-            shippingbe.StartInfo.FileName = gamePath + "\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping_BE.exe";
+ 
+
+
             Process shipping = new Process();
             shipping.StartInfo.FileName = gamePath + "\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
-            shipping.StartInfo.Arguments = $" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -skippatchcheck -nobe -fromfl=eac -fltoken=3db3ba5dcbd2e16703f3978d -nosplash -caldera=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiYmU5ZGE1YzJmYmVhNDQwN2IyZjQwZWJhYWQ4NTlhZDQiLCJnZW5lcmF0ZWQiOjE2Mzg3MTcyNzgsImNhbGRlcmFHdWlkIjoiMzgxMGI4NjMtMmE2NS00NDU3LTliNTgtNGRhYjNiNDgyYTg2IiwiYWNQcm92aWRlciI6IkVhc3lBbnRpQ2hlYXQiLCJub3RlcyI6IiIsImZhbGxiYWNrIjpmYWxzZX0.VAWQB67RTxhiWOxx7DBjnzDnXyyEnX7OljJm-j2d88G_WgwQ9wrE6lwMEHZHjBd1ISJdUO1UVUqkfLdU5nofBQ -AUTH_LOGIN={email} -AUTH_PASSWORD={password} -AUTH_TYPE=epic";
+            shipping.StartInfo.Arguments = $" -log -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -skippatchcheck -nobe -fromfl=eac -fltoken=3db3ba5dcbd2e16703f3978d -nosplash -caldera=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiYmU5ZGE1YzJmYmVhNDQwN2IyZjQwZWJhYWQ4NTlhZDQiLCJnZW5lcmF0ZWQiOjE2Mzg3MTcyNzgsImNhbGRlcmFHdWlkIjoiMzgxMGI4NjMtMmE2NS00NDU3LTliNTgtNGRhYjNiNDgyYTg2IiwiYWNQcm92aWRlciI6IkVhc3lBbnRpQ2hlYXQiLCJub3RlcyI6IiIsImZhbGxiYWNrIjpmYWxzZX0.VAWQB67RTxhiWOxx7DBjnzDnXyyEnX7OljJm-j2d88G_WgwQ9wrE6lwMEHZHjBd1ISJdUO1UVUqkfLdU5nofBQ -AUTH_LOGIN={email} -AUTH_PASSWORD={password} -AUTH_TYPE=epic";
             shipping.StartInfo.UseShellExecute = false;
             shipping.StartInfo.RedirectStandardOutput = true;
             shipping.StartInfo.RedirectStandardError = true;
@@ -93,11 +100,11 @@ namespace XybLauncher
             // Process[] processes = Process.GetProcessesByName("FortniteClient-Win64-Shipping");
             //  if (processes.Length > 0)
             //  {
-            //  MomentumLauncher.Injector.Inject(processes[0].Id, appdata + "\\" + dllName);
+            //  XybLauncher.Injector.Inject(processes[0].Id, appdata + "\\" + dllName);
             // }
             shipping.Start();
             XybLauncher.Injector.Inject(shipping.Id, appdata + "\\" + dllName);
-            Environment.Exit(0);
+            Console.ReadLine();
         }
 
         private static async Task DownloadFileAsync(string url, string outputPath)
@@ -135,7 +142,7 @@ namespace XybLauncher
 
             string jsonFilePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher/versions.json";
             string dllDownload = "https://www.dropbox.com/scl/fi/m996mhjy77qn2t3bfxq6l/Cobalt.dll?rlkey=6araxm5ngyznp4fmvxqtgm9a7&st=x92p80dd&dl=0"; // Replace with actual URL
-            string dllName = "Cobalt.dll"; // Replace with actual DLL name
+            string dllName = "Cobalt.dll";
 
             await fortniteManager.StartFortnite(jsonFilePath, dllDownload, dllName);
         }
