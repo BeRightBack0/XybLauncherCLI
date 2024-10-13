@@ -78,16 +78,34 @@ namespace XybLauncher
       uint dwCreationFlags,
       IntPtr lpThreadId);
 
-    public static void Inject(int processId, string path)
-    {
-      IntPtr hProcess = Injector.OpenProcess(1082, false, processId);
-      IntPtr procAddress = Injector.GetProcAddress(Injector.GetModuleHandle("kernel32.dll"), "LoadLibraryA");
-      uint num1 = (uint) ((path.Length + 1) * Marshal.SizeOf(typeof (char)));
-      IntPtr num2 = Injector.VirtualAllocEx(hProcess, IntPtr.Zero, num1, 12288U, 4U);
-      Injector.WriteProcessMemory(hProcess, num2, Encoding.Default.GetBytes(path), num1, out UIntPtr _);
-      Injector.CreateRemoteThread(hProcess, IntPtr.Zero, 0U, procAddress, num2, 0U, IntPtr.Zero);
-    }
+        public static void Inject(int processId, string dllPath, string argument)
+        {
+            IntPtr hProcess = Injector.OpenProcess(1082, false, processId);
+            IntPtr procAddress = Injector.GetProcAddress(Injector.GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 
-    public delegate bool HandlerRoutine(int dwCtrlType);
+            uint dllPathSize = (uint)((dllPath.Length + 1) * Marshal.SizeOf(typeof(char)));
+            IntPtr remoteDllPathMemory = Injector.VirtualAllocEx(hProcess, IntPtr.Zero, dllPathSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+            Injector.WriteProcessMemory(hProcess, remoteDllPathMemory, Encoding.Default.GetBytes(dllPath), dllPathSize, out _);
+
+
+            IntPtr threadHandle = Injector.CreateRemoteThread(hProcess, IntPtr.Zero, 0, procAddress, remoteDllPathMemory, 0, IntPtr.Zero);
+
+
+
+
+            IntPtr injectedModule = Injector.GetModuleHandle(Path.GetFileNameWithoutExtension(dllPath));
+            IntPtr functionAddress = Injector.GetProcAddress(injectedModule, "InjectedFunction"); // Your exported function
+
+
+            uint argumentSize = (uint)((argument.Length + 1) * Marshal.SizeOf(typeof(char)));
+            IntPtr remoteArgMemory = Injector.VirtualAllocEx(hProcess, IntPtr.Zero, argumentSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+            Injector.WriteProcessMemory(hProcess, remoteArgMemory, Encoding.Default.GetBytes(argument), argumentSize, out _);
+
+
+            Injector.CreateRemoteThread(hProcess, IntPtr.Zero, 0, functionAddress, remoteArgMemory, 0, IntPtr.Zero);
+        }
+
+
+        public delegate bool HandlerRoutine(int dwCtrlType);
   }
 }

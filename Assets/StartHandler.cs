@@ -103,7 +103,7 @@ namespace XybLauncher
             //  XybLauncher.Injector.Inject(processes[0].Id, appdata + "\\" + dllName);
             // }
             shipping.Start();
-            XybLauncher.Injector.Inject(shipping.Id, appdata + "\\" + dllName);
+            XybLauncher.Injector.Inject(shipping.Id, Path.Combine(appdata, dllName), " --protocol https --host 127.0.0.1 --port 3531");
             Console.ReadLine();
         }
 

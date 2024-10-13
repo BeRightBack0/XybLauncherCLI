@@ -80,7 +80,7 @@ namespace XybLauncher
 
                         if (!responseMessage.IsSuccessStatusCode)
                         {
-                            Console.WriteLine($"HTTP Request error: {responseMessage.ReasonPhrase}");
+                            Console.WriteLine($"[red]ERROR[/] Download link is not valid");
                             return;
                         }
 
