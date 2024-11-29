@@ -57,7 +57,7 @@ internal class VersionHandler
             // Check if there is a selected season
             if (!string.IsNullOrEmpty(data.Selected))
             {
-                Console.WriteLine($"Selected Version: [bold green]{data.Selected}[/]");
+                Console.WriteLine($"Selected Version: [green]{data.Selected}[/]");
             }
             else
             {

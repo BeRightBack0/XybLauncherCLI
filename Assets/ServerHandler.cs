@@ -106,8 +106,8 @@ internal class ServerHandler
          Process[] processes = Process.GetProcessesByName("FortniteClient-Win64-Shipping");
           if (processes.Length > 0)
           {
-          XybLauncher.Injector.Inject(processes[0].Id, appdata + "\\" + dllName);
-         }
+            //XybLauncher.Injector.Inject(shipping.Id, Path.Combine(appdata, dllName), " --protocol https --host 127.0.0.1 --port 3531");
+        }
         Console.ReadLine();
     }
 

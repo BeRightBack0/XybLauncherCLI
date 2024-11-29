@@ -46,7 +46,6 @@ public static class Program
         );
 
         AnsiConsole.Write(new Rule("[blue]Welcome to XYB Launcher CLI[/]").Centered());
-        AnsiConsole.MarkupLine($"[bold yellow]Welcome, {Environment.UserName}, to the [underline blue]XYB Launcher CLI[/].[/]");
         AnsiConsole.MarkupLine("Use the arrow keys [underline blue]UP[/] and [underline blue]DOWN[/] to navigate through the options.");
 
         VersionHandler.LoadSelectedSeason();
@@ -77,8 +76,8 @@ public static class Program
             // Client Phase
             case "Start Client":
                 AnsiConsole.Clear();
-                XybLauncher.StartHandler.RunFortnite();
                 AnsiConsole.MarkupLine("Starting the client");
+                ClientManager.Test(args);
                 break;
 
             // Server Phase

@@ -5,118 +5,81 @@ using System.Runtime.InteropServices;
 
 namespace XybLauncher
 {
-    internal class Patcher
+    class Patcher
     {
-        // Fields to store process handle and other necessary data
-        private readonly Process _process;
-        private readonly IntPtr _processHandle;
-        private readonly SigScan _sigScan;
-        private IntPtr _patchAddress;
-        private bool _isPatched;
+        private bool _runOnce;
 
-        // Byte array representing the patch data
-        private readonly byte[] _patchData = new byte[]
-        {
-            // Example patch data bytes
-            0x90, 0x90, 0x90, 0x90 // NOP instructions (for illustration)
-        };
+        private Process _fnProcess;
+        private IntPtr _fnHandle;
+        private SigScan _sigScan;
 
-        // Constructor to initialize the Patcher
-        public Patcher(Process process)
+        // NoSSLPinning
+        public static bool noSslPinning;
+        private IntPtr _verifyPeerAddress;
+        private readonly byte[] _verifyPeerPatched = { 0x41, 0x39, 0x28, 0xB0, 0x00, 0x90, 0x88, 0x83, 0x50, 0x04, 0x00, 0x00 };
+
+        public Patcher(Process fnProcess)
         {
-            _process = process ?? throw new ArgumentNullException(nameof(process));
-            _processHandle = Win32.OpenProcess(0x001F0FFF, false, _process.Id);
-            _sigScan = new SigScan(_processHandle);
-            _sigScan.SelectModule(_process.MainModule);
-            LocatePatchAddress();
+            _fnProcess = fnProcess;
+            _fnHandle = Win32.OpenProcess(Win32.PROCESS_ALL_ACCESS, false, _fnProcess.Id);
+            _sigScan = new SigScan(_fnHandle);
+
+            _sigScan.SelectModule(_fnProcess.MainModule);
+
+            PrefetchAddresses();
         }
 
-        // Main method to apply the patch
-        public void ApplyPatch()
+        public void Run()
         {
-            if (!_isPatched && _processHandle != IntPtr.Zero && _patchAddress != IntPtr.Zero)
+            if (_runOnce || _fnHandle == IntPtr.Zero) return;
+
+            // Run patches
+            NoSSLPinning();
+
+            _runOnce = true; // Make sure we can't trigger Run() again
+        }
+
+        private void PrefetchAddresses()
+        {
+            if (_runOnce || _fnHandle == IntPtr.Zero) return;
+
+            if (noSslPinning) _sigScan.AddPattern("CURLOPT_SSL_VERIFYPEER", "41 39 28 0F 95 C0 88 83 50 04 00 00");
+
+            Dictionary<string, ulong> allPatterns = _sigScan.FindPatterns(out long lTime);
+
+#if DEBUG
+            Console.WriteLine($"Took {lTime}ms to find {allPatterns.Count} pattern(s) in memory.");
+            Console.WriteLine();
+#endif
+
+            if (noSslPinning) _verifyPeerAddress = (IntPtr)allPatterns["CURLOPT_SSL_VERIFYPEER"];
+        }
+
+        private void NoSSLPinning()
+        {
+            if (noSslPinning && _verifyPeerAddress != IntPtr.Zero)
             {
                 try
                 {
-                    bool success = Win32.WriteProcessMemory(_processHandle, _patchAddress, _patchData, _patchData.Length, out int bytesWritten);
+                    Win32.WriteProcessMemory(_fnHandle, _verifyPeerAddress, _verifyPeerPatched, _verifyPeerPatched.Length, out IntPtr bytesWritten); // Write patched CURLOPT_SSL_VERIFYPEER code
 
-                    if (success)
-                    {
-                        Console.WriteLine($"Successfully patched {bytesWritten} byte(s) at address {_patchAddress}.");
-                        _isPatched = true;
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Failed to write memory.");
-                    }
+#if DEBUG
+                    // Log how many bytes we wrote
+                    Console.WriteLine($"Patched {bytesWritten} byte(s) in CURLOPT_SSL_VERIFYPEER.");
+                    Console.WriteLine();
+#endif
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
+#if DEBUG
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"An error occurred while applying the patch: {ex.Message}");
+                    Console.WriteLine($"An error has occured while attempting to patch CURLOPT_SSL_VERIFYPEER. Message = {e.Message}");
+                    Console.WriteLine();
+#endif
                 }
-                finally
-                {
-                    Console.ResetColor();
-                }
+
+                noSslPinning = false; // Set noSslPinning to false to make sure we don't trigger this again!
             }
-        }
-
-        // Method to locate the address where the patch needs to be applied
-        private void LocatePatchAddress()
-        {
-            if (_processHandle != IntPtr.Zero)
-            {
-                _sigScan.AddPattern("ExamplePattern", "90 90 90 90"); // Example pattern
-                var addresses = _sigScan.FindPatterns(out long elapsedTime);
-                Console.WriteLine($"Pattern search took {elapsedTime}ms.");
-                Console.WriteLine();
-
-                if (addresses.TryGetValue("ExamplePattern", out ulong address))
-                {
-                    _patchAddress = (IntPtr)address;
-                }
-            }
-        }
-    }
-
-    // Win32 API wrapper class
-    internal static class Win32
-    {
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr OpenProcess(uint processAccess, bool bInheritHandle, int processId);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int nSize, out int lpNumberOfBytesWritten);
-    }
-
-    // Example SigScan class
-    internal class SigScan
-    {
-        private readonly IntPtr _processHandle;
-
-        public SigScan(IntPtr processHandle)
-        {
-            _processHandle = processHandle;
-        }
-
-        public void SelectModule(ProcessModule module)
-        {
-            // Implementation for selecting module
-        }
-
-        public void AddPattern(string name, string pattern)
-        {
-            // Implementation for adding pattern
-        }
-
-        public Dictionary<string, ulong> FindPatterns(out long elapsedTime)
-        {
-            // Implementation for finding patterns
-            elapsedTime = 0;
-            return new Dictionary<string, ulong>(); // Placeholder return value
         }
     }
 }
