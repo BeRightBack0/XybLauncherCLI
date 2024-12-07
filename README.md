@@ -22,7 +22,7 @@ Tested up to 8.51
 
 ## Feature List TODO
 - [x] Download Build in Launcher
-- [ ] Account System
+- [x] Account System
 - [x] Version Select System
 - [ ] Custom DLL Inject Support
 - [ ] Server Hosting Support
