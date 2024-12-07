@@ -13,7 +13,9 @@ namespace XybLauncher
 
         private static string versionsdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher/versions.json";
 
-        private const string FORTNITE_EXECUTABLE = "D:\\Builds\\7.40\\7.40\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
+        private const string FORTNITE_EXECUTABLE = "D:\\Builds\\Fortnite 8.51\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
+
+
 
         private static Process _fnProcess;
         private static Patcher _fnPatcher;
@@ -21,6 +23,7 @@ namespace XybLauncher
         public static void Test(string[] args)
         {
             string joinedArgs = string.Join(" ", args);
+            string appdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher";
 
             // Check if -FORCECONSOLE exists in args (regardless of case) to force console (due to Epic Games Launcher by default hiding it)
             if (joinedArgs.ToUpper().Contains("-FORCECONSOLE"))
@@ -58,13 +61,18 @@ namespace XybLauncher
             // Setup a process exit event handler
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
+            var accountParser = new AccountParser();
+            string email = accountParser.GetAccountInfo("email");
+            string password = accountParser.GetAccountInfo("password");
+
+
             // Initialize Fortnite process with start info
             _fnProcess = new Process
             {
                 StartInfo =
                 {
                     FileName               = FORTNITE_EXECUTABLE,
-                    Arguments              = $"{joinedArgs} -NOSSLPINNING -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -skippatchcheck -nobe -fromfl=eac -fltoken=3db3ba5dcbd2e16703f3978d -caldera=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiYmU5ZGE1YzJmYmVhNDQwN2IyZjQwZWJhYWQ4NTlhZDQiLCJnZW5lcmF0ZWQiOjE2Mzg3MTcyNzgsImNhbGRlcmFHdWlkIjoiMzgxMGI4NjMtMmE2NS00NDU3LTliNTgtNGRhYjNiNDgyYTg2IiwiYWNQcm92aWRlciI6IkVhc3lBbnRpQ2hlYXQiLCJub3RlcyI6IiIsImZhbGxiYWNrIjpmYWxzZX0.VAWQB67RTxhiWOxx7DBjnzDnXyyEnX7OljJm-j2d88G_WgwQ9wrE6lwMEHZHjBd1ISJdUO1UVUqkfLdU5nofBQ -AUTH_LOGIN=birajtsrak@outlook.com -AUTH_PASSWORD=12345678 -AUTH_TYPE=epic",
+                    Arguments              = $"{joinedArgs} -NOSSLPINNING -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -skippatchcheck -nobe -fromfl=eac -fltoken=3db3ba5dcbd2e16703f3978d -caldera=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiYmU5ZGE1YzJmYmVhNDQwN2IyZjQwZWJhYWQ4NTlhZDQiLCJnZW5lcmF0ZWQiOjE2Mzg3MTcyNzgsImNhbGRlcmFHdWlkIjoiMzgxMGI4NjMtMmE2NS00NDU3LTliNTgtNGRhYjNiNDgyYTg2IiwiYWNQcm92aWRlciI6IkVhc3lBbnRpQ2hlYXQiLCJub3RlcyI6IiIsImZhbGxiYWNrIjpmYWxzZX0.VAWQB67RTxhiWOxx7DBjnzDnXyyEnX7OljJm-j2d88G_WgwQ9wrE6lwMEHZHjBd1ISJdUO1UVUqkfLdU5nofBQ -AUTH_LOGIN={email} -AUTH_PASSWORD={password} -AUTH_TYPE=epic",
                     RedirectStandardOutput = true,
                     RedirectStandardError  = true,
                     UseShellExecute        = false
@@ -72,6 +80,8 @@ namespace XybLauncher
             };
 
             _fnProcess.Start(); // Start Fortnite client process
+            XybLauncher.Injector.Inject(_fnProcess.Id, appdata + "\\Cobalt.dll");
+
 
             // Set up our async readers
             AsyncStreamReader asyncOutputReader = new AsyncStreamReader(_fnProcess.StandardOutput);

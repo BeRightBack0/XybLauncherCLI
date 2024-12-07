@@ -6,7 +6,6 @@ using System.Net;
 using System.Threading.Tasks;
 using static Terminal.Gui.Graphs.PathAnnotation;
 using static XybLauncher.FilesManager;
-using static XybLauncher.StartHandler;
 using static XybLauncher.AccountHandler;
 using System.Net.Http;
 using System.Text.Json.Serialization;
