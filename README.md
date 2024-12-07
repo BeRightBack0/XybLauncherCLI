@@ -22,8 +22,9 @@ Tested up to 8.51
 
 ## Feature List TODO
 - [x] Download Build in Launcher
-- [x] Account System
+- [x] Account System (to be redone really hard to see info about accounts and selecting need to be redone(visual side))
 - [x] Version Select System
+- [ ] Custom Redirect Support (Next update)
 - [ ] Custom DLL Inject Support
 - [ ] Server Hosting Support
 - [ ] Maybe Pak Files Mounting
