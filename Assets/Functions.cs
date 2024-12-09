@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+// Its not being used by anything for now 
+
 namespace XybLauncher.Assets
 {
     internal class Functions
@@ -134,7 +137,7 @@ namespace XybLauncher.Assets
         }
 
 
-
+        // return new LoginResult(ErrorCodes.ACCOUNT_LOCKED); Example ok ok ok 
 
 
 

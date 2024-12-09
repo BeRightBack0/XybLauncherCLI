@@ -18,9 +18,6 @@ namespace XybLauncher
     {
 
 
-       
-
-
         private readonly HttpClient _httpClient;
 
         public FilesManager()
@@ -153,6 +150,7 @@ namespace XybLauncher
 
                 ZipFile.ExtractToDirectory(filePath, extractPath);
                 Console.WriteLine($"File unzipped to: {extractPath}");
+                File.Delete(filePath);
             }
             catch (Exception unzipEx)
             {

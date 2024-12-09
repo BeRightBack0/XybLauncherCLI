@@ -67,7 +67,7 @@ public static class Program
                 .PageSize(6)
                 .AddChoices(new[]
                 {
-                    "Start Client" ,"Start Server", "Add Fortnite Version", "Select Fortnite Version",  "Download Build", "Account Manager", "Exit",
+                    "Start Client" ,"Start Server", "Add Fortnite Version", "Select Fortnite Version","Remove Fortnite Version", "Download Build", "Account Manager", "Exit",
                 }));
 
         switch (option)
@@ -160,6 +160,7 @@ public static class Program
 
                     // Indicate that the process has completed
                     Console.WriteLine("Download completed successfully. Press Enter to exit.");
+
                 }
                 catch (Exception ex)
                 {
@@ -171,6 +172,7 @@ public static class Program
                     // Keep the console window open
                     Console.ReadLine();
                 }
+                Main(args);
                 break;
 
 
