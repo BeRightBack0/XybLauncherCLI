@@ -3,6 +3,7 @@
 ![Size](https://img.shields.io/github/repo-size/BeRightBack0/XybLauncherCLI)
 ![Downloads](https://img.shields.io/github/downloads/BeRightBack0/XybLauncherCLI/total)
 ![License](https://img.shields.io/github/license/BeRightBack0/XybLauncherCLI)
+![Runner](https://img.shields.io/npm/v/npm.svg?logo=nodedotjs)
 
 XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite, offering an efficient way to manage and launch different builds of the game. It's the CLI version of XybLauncher (WIP), focusing on performance and essential features.
 
