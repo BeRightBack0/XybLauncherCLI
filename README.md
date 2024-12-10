@@ -56,6 +56,7 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 - [ ] PAK File Mounting
 - [ ] Graphical User Interface
 - [ ] Custom Server DLL Support
+- [ ] Automatic Version Adding After Downloading a Build
 
 ## Contributing
 
