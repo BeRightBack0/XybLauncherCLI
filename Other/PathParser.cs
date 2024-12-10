@@ -42,5 +42,19 @@ namespace XybLauncher
 
             throw new Exception("Selected version not found in the JSON file.");
         }
+
+        public static string FindFortniteDirectory(string basePath)
+        {
+            // Find directory containing both "FortniteGame" and "Engine"
+            foreach (var subDirectory in Directory.GetDirectories(basePath))
+            {
+                if (Directory.Exists(Path.Combine(subDirectory, "FortniteGame")) &&
+                    Directory.Exists(Path.Combine(subDirectory, "Engine")))
+                {
+                    return subDirectory;
+                }
+            }
+            return null; // If no valid directory is found
+        }
     }
 }
