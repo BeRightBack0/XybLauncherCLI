@@ -30,8 +30,9 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 ### Downloading a Build
 1. From the main menu, select "Download Build"
 2. Choose your desired Fortnite version from the version selector
-3. Wait for the download to complete
-4. The launcher will verify the files automatically
+3. Enter the directory to where you want the build to download
+4. Wait for the download to complete
+5. Now go to the directory your downloaded build is located and delete the .zip file (i broke the deletion of the .zip im gonna fix it in the next update sorry)
 
 ### Launching the Game
 1. Select "Launch Game" from the main menu
