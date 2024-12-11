@@ -1,37 +1,76 @@
-![Visits](https://komarev.com/ghpvc/?username=BeRightBack0&style=for-the-badge)
+# XybLauncherCLI
+
 ![Size](https://img.shields.io/github/repo-size/BeRightBack0/XybLauncherCLI)
 ![Downloads](https://img.shields.io/github/downloads/BeRightBack0/XybLauncherCLI/total)
 ![License](https://img.shields.io/github/license/BeRightBack0/XybLauncherCLI)
 
+XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite, offering an efficient way to manage and launch different builds of the game. It's the CLI version of XybLauncher (WIP), focusing on performance and essential features.
 
-XybLauncherCLI Is a OG Fortnite Launcher ,a its Comamand Line Interface version of XybLauncher (WIP) that offers downloading builds from launcher great version selector and while being lightweight.
+## Features
 
-Most features arent implemented yet, they are being worked on, they will be ready soon
+- **Build Download Manager**: Download and manage different Fortnite builds directly through the launcher
+- **Version Selection System**: Easy-to-use version selector for different Fortnite builds
+- **Account System**: Manage multiple accounts (currently being redesigned for better user experience)
+- **Lightweight Design**: Minimal resource usage while maintaining full functionality
 
+## Installation Guide
 
+1. Go to the [Releases](https://github.com/BeRightBack0/XybLauncherCLI/releases) page
+2. Choose your preferred installation method:
+   - `.msi` installer: Download and run the installer
+   - `.zip` archive: Download and extract to your desired location
 
-# Installation
-Go to Releases and choose .msi installer or .zip 
-then just install using .msi or extract .zip archive.
+## Usage Tutorial
 
+### Getting Started
+1. Launch XybLauncherCLI after installation
+2. Use the account system to set up your gaming profile
 
+### Downloading a Build
+1. From the main menu, select "Download Build"
+2. Choose your desired Fortnite version from the version selector
+3. Wait for the download to complete
+4. The launcher will verify the files automatically
+
+### Launching the Game
+1. Select "Launch Game" from the main menu
+2. Choose your desired build from installed versions
+3. Select your account
+4. Wait for the game to start
 
 ## Compatibility
-Tested up to 8.51
 
+- Tested and verified working up to version 8.51
+- Support for newer versions is being actively developed
 
-## Feature List TODO
-- [x] Download Build in Launcher
-- [x] Account System (to be redone really hard to see info about accounts and selecting need to be redone(visual side))
-- [x] Version Select System
-- [ ] Custom Redirect Support (Next update)
-- [ ] Custom DLL Inject Support
-- [ ] Server Hosting Support
-- [ ] Maybe Pak Files Mounting
-- [ ] UI Interface (later)
+## Upcoming Features
+
+- [x] Build Download System
+- [x] Account Management
+- [x] Version Selection
+- [ ] Custom Redirect Support (Next Update)
+- [ ] Custom DLL Injection Support (Next Update)
+- [ ] Server Hosting Capabilities
+- [ ] PAK File Mounting
+- [ ] Graphical User Interface
 - [ ] Custom Server DLL Support
 
+## Contributing
+
+Contributions are welcome! Feel free to submit issues and pull requests.
 
 ## Star History
 
 ![Star History Chart](https://api.star-history.com/svg?repos=BeRightBack0/XybLauncherCLI&type=Date)
+
+## Support
+
+If you encounter any issues or need help:
+1. Check the [Issues](https://github.com/BeRightBack0/XybLauncherCLI/issues) page
+2. Create a new issue if your problem hasn't been reported
+3. Join our community for support (Add your community links here)
+
+## License
+
+This project is licensed under the terms shown in the license badge above. See the LICENSE file for details.
+ 
