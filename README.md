@@ -43,6 +43,7 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 ## Compatibility
 
 - Tested and verified working up to version 8.51
+- Launcher automaticly downloads redirect that redirects to 127.0.0.1:3531
 - Support for newer versions is being actively developed
 
 ## Upcoming Features
