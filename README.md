@@ -3,6 +3,7 @@
 ![Size](https://img.shields.io/github/repo-size/BeRightBack0/XybLauncherCLI)
 ![Downloads](https://img.shields.io/github/downloads/BeRightBack0/XybLauncherCLI/total)
 ![License](https://img.shields.io/github/license/BeRightBack0/XybLauncherCLI)
+![Runner](https://img.shields.io/npm/v/npm.svg?logo=nodedotjs)
 
 XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite, offering an efficient way to manage and launch different builds of the game. It's the CLI version of XybLauncher (WIP), focusing on performance and essential features.
 
@@ -29,8 +30,9 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 ### Downloading a Build
 1. From the main menu, select "Download Build"
 2. Choose your desired Fortnite version from the version selector
-3. Wait for the download to complete
-4. The launcher will verify the files automatically
+3. Enter the directory to where you want the build to download
+4. Wait for the download to complete
+5. Now go to the directory your downloaded build is located and delete the .zip file (i broke the deletion of the .zip im gonna fix it in the next update sorry)
 
 ### Launching the Game
 1. Select "Launch Game" from the main menu
@@ -41,6 +43,7 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 ## Compatibility
 
 - Tested and verified working up to version 8.51
+- Launcher automaticly downloads redirect that redirects to 127.0.0.1:3531
 - Support for newer versions is being actively developed
 
 ## Upcoming Features
@@ -54,6 +57,7 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 - [ ] PAK File Mounting
 - [ ] Graphical User Interface
 - [ ] Custom Server DLL Support
+- [ ] Automatic Version Adding After Downloading a Build
 
 ## Contributing
 
