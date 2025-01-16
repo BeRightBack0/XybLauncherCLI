@@ -17,7 +17,7 @@ namespace XybLauncher
         public static void Test(string[] args)
         {
             string selectedPath = PathParser.GetSelectedPath(versionsdata);
-            string fortniteExecutable = $"{selectedPath}\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
+            string fortniteExecutable = $"{selectedPath}\\FortniteGame\\Binaries\\Win32\\FortniteClient-Win64-Shipping.exe";
 
             string joinedArgs = string.Join(" ", args);
             string appdata = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "XybLauncher");
@@ -109,13 +109,14 @@ namespace XybLauncher
             asyncOutputReader.Start();
             asyncErrorReader.Start();
 
-            _fnProcess.WaitForExit(); // We'll wait for the Fortnite process to exit, otherwise our launcher will just close instantly
+            _fnProcess.WaitForExit(); // We'll wait for the Fortnite process to exit, otherwise the launcher will close
         }
 
         private static void OnProcessExit(object sender, EventArgs e)
         {
             if (!_fnProcess.HasExited)
                 _fnProcess.Kill();
+            Program.MainMenu();
         }
     }
 }
