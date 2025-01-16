@@ -57,7 +57,7 @@ public static class Program
 
         if (!Directory.Exists(appdata))
         {
-            AnsiConsole.MarkupLine("[yellow]Appdata folder is missing, creating one for you...[/]");
+            AnsiConsole.MarkupLine("[yellow]Appdata folder is missing, creating one [/]");
             Directory.CreateDirectory(appdata);
         }
 
@@ -67,7 +67,7 @@ public static class Program
                 .PageSize(6)
                 .AddChoices(new[]
                 {
-                    "Start Client" ,"Start Server", "Add Fortnite Version", "Select Fortnite Version","Remove Fortnite Version", "Download Build", "Account Manager", "Exit",
+                    "Start Client" ,"Start Server", "Add Fortnite Version", "Select Fortnite Version","Build Manager", "Download Build", "Account Manager", "Exit",
                 }));
 
         switch (option)

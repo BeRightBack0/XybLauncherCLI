@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using static XybLauncher.VersionHandler;
 using Spectre.Console;
 
-//TODO Name it better and tranfer all function for versions selection and handling here ok and downloading builds herre ok ok ok
+// Just make the code readable
 namespace XybLauncher;
 
 internal class VersionHandler
 {
-    //Strings
+
     private static string selectedSeason = null;
     private static string selectedSeasonFilePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher/selectedseason.json";
     private static string selectedPath = null;
@@ -24,6 +24,9 @@ internal class VersionHandler
         public int Index { get; set; }
         public string Season { get; set; }
         public string Path { get; set; }
+        public bool IsOnlineTest { get; set; }
+       
+
     }
 
     public class FortniteVersions
@@ -48,13 +51,12 @@ internal class VersionHandler
 
         try
         {
-            // Read the JSON file
             var jsonData = File.ReadAllText(versionsdata);
 
             // Deserialize the JSON data into the FortniteVersions object
             var data = JsonConvert.DeserializeObject<FortniteVersions>(jsonData);
 
-            // Check if there is a selected season
+            // Check if there is a selected build
             if (!string.IsNullOrEmpty(data.Selected))
             {
                 AnsiConsole.Markup($"Selected Version: [green]{data.Selected}[/]");
@@ -62,7 +64,7 @@ internal class VersionHandler
             }
             else
             {
-                Console.WriteLine("No season selected.");
+                Console.WriteLine("No build selected.");
             }
         }
         catch (Exception ex)
@@ -75,7 +77,7 @@ internal class VersionHandler
         // Check if the file exists
         if (!File.Exists(versionsdata))
         {
-            Console.WriteLine("No versions found. Please add a version first.");
+            Console.WriteLine("No versions found. Please add a build first.");
             return;
         }
 
@@ -149,6 +151,24 @@ internal class VersionHandler
         Console.Write("Enter Fortnite season: ");
         string fortniteSeason = Console.ReadLine();
 
+
+        var selection = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Is the Build Online Test?")
+                .PageSize(3)
+                .AddChoices(new[] {
+                    "Yes",
+                    "No"
+                })
+                .HighlightStyle(new Style(Color.Blue)) // Blue highlight for selected option
+        );
+        bool isOnlineTest = selection == "Yes";
+
+
+
+
+
+
         // Load existing data or create new structure
         FortniteVersions data;
         if (File.Exists(versionsdata))
@@ -172,7 +192,8 @@ internal class VersionHandler
         {
             Index = newIndex,
             Season = fortniteSeason,
-            Path = fortnitePath
+            Path = fortnitePath,
+            IsOnlineTest = isOnlineTest
         };
 
         // Add the new version to the list of versions

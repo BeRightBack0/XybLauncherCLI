@@ -17,7 +17,7 @@ namespace XybLauncher
         public static void Test(string[] args)
         {
             string selectedPath = PathParser.GetSelectedPath(versionsdata);
-            string fortniteExecutable = $"{selectedPath}\\FortniteGame\\Binaries\\Win32\\FortniteClient-Win64-Shipping.exe";
+            string fortniteExecutable = $"{selectedPath}\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
 
             string joinedArgs = string.Join(" ", args);
             string appdata = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "XybLauncher");
