@@ -16,8 +16,10 @@ namespace XybLauncher
 
         public static void Test(string[] args)
         {
+            string buildarchitecture = XybLauncher.CustomArguments.GetBuildArchitecture();
             string selectedPath = PathParser.GetSelectedPath(versionsdata);
-            string fortniteExecutable = $"{selectedPath}\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
+
+            string fortniteExecutable = $"{selectedPath}\\FortniteGame\\Binaries\\{buildarchitecture}\\FortniteClient-Win64-Shipping.exe";
 
             string joinedArgs = string.Join(" ", args);
             string appdata = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "XybLauncher");
@@ -45,7 +47,7 @@ namespace XybLauncher
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"\"{fortniteExecutable}\" is missing!");
                 Console.ReadKey();
-                Environment.Exit(1);
+                Program.MainMenu();
             }
 
             // Check if -NOSSLPINNING exists in args (regardless of case) to disable SSL pinning

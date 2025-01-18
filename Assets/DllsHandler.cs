@@ -16,6 +16,9 @@ public class DllsHandler
     {
 
 
+        // Make all dlls download in a subfolder 
+
+
         string appfolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher";
 
         if (!File.Exists(appfolder + "\\Cobalt.dll"))

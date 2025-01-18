@@ -283,6 +283,22 @@ namespace XybLauncher
                     break;
             }
         }
+
+
+        // Create config.json if its not there ok
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
     public class Choice

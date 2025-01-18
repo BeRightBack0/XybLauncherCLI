@@ -3,7 +3,6 @@
 ![Size](https://img.shields.io/github/repo-size/BeRightBack0/XybLauncherCLI)
 ![Downloads](https://img.shields.io/github/downloads/BeRightBack0/XybLauncherCLI/total)
 ![License](https://img.shields.io/github/license/BeRightBack0/XybLauncherCLI)
-![Runner](https://img.shields.io/npm/v/npm.svg?logo=nodedotjs)
 
 XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite, offering an efficient way to manage and launch different builds of the game. It's the CLI version of XybLauncher (WIP), focusing on performance and essential features.
 
@@ -25,9 +24,9 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 
 ### Getting Started
 1. Launch XybLauncherCLI after installation
-2. Use the account system to set up your gaming profile
+2. Use the account system to add your account
 
-### Downloading a Build
+### Downloading a Build (Broken in 1.1.0)
 1. From the main menu, select "Download Build"
 2. Choose your desired Fortnite version from the version selector
 3. Enter the directory to where you want the build to download
@@ -51,6 +50,7 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 - [x] Build Download System
 - [x] Account Management
 - [x] Version Selection
+- [ ] Run OT In Game 
 - [ ] Custom Redirect Support (Next Update)
 - [ ] Custom DLL Injection Support (Next Update)
 - [ ] Server Hosting Capabilities
@@ -72,9 +72,9 @@ Contributions are welcome! Feel free to submit issues and pull requests.
 If you encounter any issues or need help:
 1. Check the [Issues](https://github.com/BeRightBack0/XybLauncherCLI/issues) page
 2. Create a new issue if your problem hasn't been reported
-3. Join our community for support (Add your community links here)
+3. Join our community for support [Discord](https://discord.gg/KVp8xYusPx)
 
 ## License
 
-This project is licensed under the terms shown in the license badge above. See the LICENSE file for details.
+This project is licensed under the terms shown in the license badge at the top. See the LICENSE file for details.
  

@@ -11,6 +11,7 @@
         <RootNamespace>XybLauncher</RootNamespace>
         <PlatformTarget>AnyCPU</PlatformTarget>
 		<Version>0.0.3</Version>
+		<Platforms>AnyCPU;x86</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
