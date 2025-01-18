@@ -11,9 +11,12 @@ namespace XybLauncher
 
 
     // hold all functions for passing the arguments here and just call them in client manager.cs
-    internal class CustomArguments
+    public class CustomArguments
     {
-        private string _default_arguments = @"
+        
+        public readonly string _otarguments = "-epicportal -epiclocale=en-us -skippatchcheck -HTTP=WinInet -NOSSLPINNING -AUTH_PASSWORD=5001 -AUTH_LOGIN=unknown -AUTH_TYPE=exchangecode";
+
+        private readonly string default_arguments = @"
         -NOSSLPINNING 
         -epicapp=Fortnite 
         -epicenv=Prod 
@@ -28,15 +31,16 @@ namespace XybLauncher
         -AUTH_PASSWORD={password} 
         -AUTH_TYPE=epic";
 
-        private string _otarguments = "-log -epicportal -epiclocale=en-us -skippatchcheck -HTTP=WinInet -NOSSLPINNING -AUTH_PASSWORD=5001 -AUTH_LOGIN=unknown -AUTH_TYPE=exchangecode";
+        public string GetDefaultArgs()
+        {
+            var json = File.ReadAllText(versionsdata);
+            var fortniteVersions = JsonConvert.DeserializeObject<FortniteVersions>(json);
+
+            var selectedVersion = fortniteVersions?.Versions.Find(v => v.Season == fortniteVersions.Selected);
 
 
-
-
-
-
-
-
+            return selectedVersion?.IsOnlineTest == true ? _otarguments : default_arguments;
+        }
 
 
 
