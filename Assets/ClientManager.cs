@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Spectre.Console;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -90,6 +91,13 @@ namespace XybLauncher
 
             asyncOutputReader.DataReceived += delegate (object sender, string data)
             {
+                if (data == null)
+                {
+                    AnsiConsole.Clear();
+                    XybLauncher.Program.MainMenu();
+                    return;
+                }
+
                 Console.ForegroundColor = ConsoleColor.White;
 
                 string formattedData = data.ToUpper().Replace(" ", "_"); // Convert data to all uppercase characters and replace spaces with "_"
@@ -118,11 +126,11 @@ namespace XybLauncher
             _fnProcess.WaitForExit(); // We'll wait for the Fortnite process to exit, otherwise the launcher will close
         }
 
-        private static void OnProcessExit(object sender, EventArgs e)
+        private static async void OnProcessExit(object sender, EventArgs e)
         {
             if (!_fnProcess.HasExited)
                 _fnProcess.Kill();
-            Program.MainMenu();
+            Console.ReadKey();
         }
     }
 }
