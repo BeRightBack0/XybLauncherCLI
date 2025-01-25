@@ -14,13 +14,13 @@ using SharpCompress.Archives.Zip;
 
 namespace XybLauncher
 {
-    public class FilesManager
+    public class BuildDownloader
     {
 
 
         private readonly HttpClient _httpClient;
 
-        public FilesManager()
+        public BuildDownloader()
         {
             _httpClient = new HttpClient();
         }
@@ -33,7 +33,7 @@ namespace XybLauncher
                 try
                 {
 
-                    // Make the API call and get the response as a string
+                    // Rewrite it to use new api instead of old deprecated one
                     string apiUrl = "https://xyb-launcher-api.vercel.app/builds";
                     using HttpClient client = new HttpClient();
                     HttpResponseMessage response = await client.GetAsync(apiUrl);
@@ -130,6 +130,7 @@ namespace XybLauncher
                 }
                 catch (Exception ex)
                 {
+
                     Console.WriteLine($"Error in HandleActionAsync: {ex.Message}");
                 }
             }
@@ -150,6 +151,7 @@ namespace XybLauncher
 
                 ZipFile.ExtractToDirectory(filePath, extractPath);
                 Console.WriteLine($"File unzipped to: {extractPath}");
+                // Idk why but its not deleting the zip after unzipping fix it 25.01.25 (old bug)
                 File.Delete(filePath);
             }
             catch (Exception unzipEx)
@@ -281,22 +283,8 @@ namespace XybLauncher
                 default:
                     Console.WriteLine("Unknown action");
                     break;
-            }
+            }                               
         }
-
-
-        // Create config.json if its not there ok
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

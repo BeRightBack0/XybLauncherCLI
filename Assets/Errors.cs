@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace XybLauncher.Assets
 {
-    internal class Functions
+    internal class Errors
     {
         public static class ErrorCodes
         {

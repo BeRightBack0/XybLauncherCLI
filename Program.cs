@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using static Terminal.Gui.Graphs.PathAnnotation;
-using static XybLauncher.FilesManager;
+using static XybLauncher.BuildDownloader;
 using static XybLauncher.AccountHandler;
 using System.Net.Http;
 using System.Text.Json.Serialization;
@@ -149,7 +149,7 @@ public static class Program
                     Console.WriteLine("Starting DownloadBuild process...");
 
                     // Instantiate FilesManager
-                    FilesManager filesManager = new FilesManager();
+                    BuildDownloader filesManager = new BuildDownloader();
 
 
                     // Call the main logic method in FilesManager
