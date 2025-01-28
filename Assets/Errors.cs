@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace XybLauncher.Assets
 {
-    internal class Errors
+    public class Errors
     {
         public static class ErrorCodes
         {
@@ -27,6 +27,7 @@ namespace XybLauncher.Assets
             public const int INVALID_FILE_FORMAT = 103;
             public const int FILE_READ_ERROR = 104;
             public const int FILE_WRITE_ERROR = 105;
+            public const int DIR_NOT_FOUND = 106;
 
             // Database Operations (200-299)
             public const int DB_CONNECTION_FAILED = 200;
@@ -73,6 +74,15 @@ namespace XybLauncher.Assets
             public const int UNAUTHORIZED_ACCESS = 402;
             public const int ACCOUNT_LOCKED = 403;
 
+            // BuildDownloader Specific Errors (500-599)
+            public const int DOWNLOAD_URL_NOT_PROVIDED = 500;
+            public const int DOWNLOAD_INTERRUPTED = 502;
+            public const int INVALID_ZIP_FILE = 503;
+            public const int EXTRACTION_FAILED = 504;
+            public const int ZIP_DELETION_FAILED = 505;
+            public const int INVALID_BUILD_PATH = 506;
+
+
             // Helper method to get error message
             public static string GetErrorMessage(int errorCode)
             {
@@ -94,6 +104,7 @@ namespace XybLauncher.Assets
                     DB_RECORD_NOT_FOUND => "Database record not found",
                     DB_DUPLICATE_ENTRY => "Duplicate database entry",
                     DB_TRANSACTION_FAILED => "Database transaction failed",
+                    DIR_NOT_FOUND => "Directory Not Found",
 
                     // Network Errors
                     NETWORK_CONNECTION_FAILED => "Network connection failed",
@@ -116,7 +127,6 @@ namespace XybLauncher.Assets
                     PROXY_CONNECTION_FAILED => "Failed to connect through proxy",
                     // Data Transfer
                     UPLOAD_FAILED => "Failed to upload data to server",
-                    DOWNLOAD_FAILED => "Failed to download data from server",
                     INCOMPLETE_RESPONSE => "Received incomplete response from server",
                     DATA_TRANSFER_INTERRUPTED => "Data transfer was interrupted",
                     BANDWIDTH_LIMIT_EXCEEDED => "Bandwidth limit has been exceeded",
@@ -126,6 +136,8 @@ namespace XybLauncher.Assets
                     UNSUPPORTED_PROTOCOL => "Unsupported network protocol",
                     TOO_MANY_REDIRECTS => "Too many redirects encountered",
                     WEBSOCKET_ERROR => "WebSocket connection error",
+
+
 
                     INVALID_CREDENTIALS => "Invalid credentials provided",
                     SESSION_EXPIRED => "Session has expired",

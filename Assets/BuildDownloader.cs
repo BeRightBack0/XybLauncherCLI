@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.Zip;
+using static XybLauncher.Assets.Errors;
 
 namespace XybLauncher
 {
@@ -34,7 +35,7 @@ namespace XybLauncher
                 {
 
                     // Rewrite it to use new api instead of old deprecated one
-                    string apiUrl = "https://xyb-launcher-api.vercel.app/builds";
+                    string apiUrl = "https://pastebin.com/GbaitDKE";
                     using HttpClient client = new HttpClient();
                     HttpResponseMessage response = await client.GetAsync(apiUrl);
                     string jsonResponse = await response.Content.ReadAsStringAsync();
