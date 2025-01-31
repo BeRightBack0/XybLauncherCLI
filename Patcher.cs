@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Xyb Ssl
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -69,7 +71,7 @@ namespace XybLauncher
                     Console.WriteLine();
 #endif
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
 #if DEBUG
                     Console.ForegroundColor = ConsoleColor.Red;

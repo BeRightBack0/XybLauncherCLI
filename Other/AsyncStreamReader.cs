@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Xyb
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -58,6 +60,8 @@ namespace XybLauncher
 
         private StreamReader _reader;
 
+#pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
         public delegate void EventHandler<args>(object sender, string data);
+#pragma warning restore CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
     }
 }

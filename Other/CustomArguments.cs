@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Xyb otarguments
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,7 +46,7 @@ namespace XybLauncher
 
 
 
-        private static string versionsdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher/versions.json";
+        private static  string versionsdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher/versions.json";
 
         public static string GetBuildArchitecture()
         {

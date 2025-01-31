@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Xyb Downloader
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -33,30 +35,34 @@ namespace XybLauncher
             {
                 try
                 {
-
-                    // Rewrite it to use new api instead of old deprecated one
-                    string apiUrl = "https://pastebin.com/GbaitDKE";
+                    string apiUrl = "https://pastebin.com/raw/GbaitDKE";
                     using HttpClient client = new HttpClient();
                     HttpResponseMessage response = await client.GetAsync(apiUrl);
                     string jsonResponse = await response.Content.ReadAsStringAsync();
 
-                    var buildData = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonResponse);
-                    var versions = buildData?.Keys.ToList() ?? new List<string>();
+                    // Deserialize the response into the new structure
+                    var buildData = JsonConvert.DeserializeObject<Dictionary<string, List<BuildInfo>>>(jsonResponse);
 
-                    if (versions.Count == 0)
+                    if (buildData == null || buildData.Count == 0)
                     {
-                        Console.WriteLine("No valid choices were returned from the API.");
+                        Console.WriteLine("API is down");
                         return;
                     }
+
+                    // Extract versions with their sizes
+                    var versions = buildData
+                        .Where(kv => kv.Value.Any())
+                        .ToDictionary(kv => kv.Key, kv => kv.Value.First().Size);
 
                     var selectedVersion = AnsiConsole.Prompt(
                         new SelectionPrompt<string>()
                             .Title("Select a version:")
                             .PageSize(10)
-                            .AddChoices(versions)
+                            .AddChoices(versions.Keys.Select(v => $"{v} ({versions[v]})"))
                     );
 
-                    var url = buildData[selectedVersion].First();
+                    string versionKey = selectedVersion.Split(' ')[0]; // Extract only the version number
+                    var versionInfo = buildData[versionKey].First();
 
                     Console.WriteLine("Enter the directory where you want to save the build:");
                     string downloadDirectory = Console.ReadLine();
@@ -67,14 +73,14 @@ namespace XybLauncher
                         return;
                     }
 
-                    string fileName = Path.GetFileName(url);
+                    string fileName = Path.GetFileName(versionInfo.Url);
                     string cleanFileName = CleanFileName(fileName);
                     string filePath = Path.Combine(downloadDirectory, cleanFileName);
 
                     try
                     {
                         using var httpClient = new HttpClient();
-                        var responseMessage = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+                        var responseMessage = await httpClient.GetAsync(versionInfo.Url, HttpCompletionOption.ResponseHeadersRead);
 
                         if (!responseMessage.IsSuccessStatusCode)
                         {
@@ -131,11 +137,21 @@ namespace XybLauncher
                 }
                 catch (Exception ex)
                 {
-
                     Console.WriteLine($"Error in HandleActionAsync: {ex.Message}");
                 }
             }
         }
+
+        // Define the object model for the new structure
+        public class BuildInfo
+        {
+            public string Url { get; set; }
+            public string Movie { get; set; }
+            public string Size { get; set; }
+            public string BackgroundImage { get; set; }
+            public string SeasonNumber { get; set; }
+        }
+
 
         private void UnzipFile(string filePath, string extractDirectory)
         {
@@ -301,6 +317,12 @@ namespace XybLauncher
         public List<Choice> Choices { get; set; }
     }
 
+    // Define the object model for the new structure
+    public class BuildInfo
+    {
+        public string Url { get; set; }
+        public string Size { get; set; }
+    }
 
 
 

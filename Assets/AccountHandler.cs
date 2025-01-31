@@ -59,7 +59,7 @@ namespace XybLauncher
                         break;
                     case "Exit":
                         AnsiConsole.MarkupLine("[bold green]Exiting...[/]");
-                        Program.Main(new string[0]);
+                        Environment.Exit(0);
                         return;
                 }
 
