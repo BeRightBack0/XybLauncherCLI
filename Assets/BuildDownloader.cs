@@ -1,6 +1,4 @@
-﻿// Ignore Spelling: Xyb Downloader
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -19,17 +17,15 @@ namespace XybLauncher
 {
     public class BuildDownloader
     {
-
-
         private readonly HttpClient _httpClient;
+        private bool _downloadCompleted = false;
 
         public BuildDownloader()
         {
             _httpClient = new HttpClient();
         }
 
-
-        public async Task HandleActionAsync(string action)
+        public async Task<bool> HandleActionAsync(string action)
         {
             if (action == "DownloadBuild")
             {
@@ -40,16 +36,14 @@ namespace XybLauncher
                     HttpResponseMessage response = await client.GetAsync(apiUrl);
                     string jsonResponse = await response.Content.ReadAsStringAsync();
 
-                    // Deserialize the response into the new structure
                     var buildData = JsonConvert.DeserializeObject<Dictionary<string, List<BuildInfo>>>(jsonResponse);
 
                     if (buildData == null || buildData.Count == 0)
                     {
                         Console.WriteLine("API is down");
-                        return;
+                        return false;
                     }
 
-                    // Extract versions with their sizes
                     var versions = buildData
                         .Where(kv => kv.Value.Any())
                         .ToDictionary(kv => kv.Key, kv => kv.Value.First().Size);
@@ -61,7 +55,7 @@ namespace XybLauncher
                             .AddChoices(versions.Keys.Select(v => $"{v} ({versions[v]})"))
                     );
 
-                    string versionKey = selectedVersion.Split(' ')[0]; // Extract only the version number
+                    string versionKey = selectedVersion.Split(' ')[0];
                     var versionInfo = buildData[versionKey].First();
 
                     Console.WriteLine("Enter the directory where you want to save the build:");
@@ -70,7 +64,7 @@ namespace XybLauncher
                     if (string.IsNullOrWhiteSpace(downloadDirectory) || !Directory.Exists(downloadDirectory))
                     {
                         Console.WriteLine("Invalid directory. Operation aborted.");
-                        return;
+                        return false;
                     }
 
                     string fileName = Path.GetFileName(versionInfo.Url);
@@ -85,7 +79,7 @@ namespace XybLauncher
                         if (!responseMessage.IsSuccessStatusCode)
                         {
                             Console.WriteLine($"[red]ERROR[/] Download link is not valid");
-                            return;
+                            return false;
                         }
 
                         var totalBytes = responseMessage.Content.Headers.ContentLength ?? -1L;
@@ -116,7 +110,6 @@ namespace XybLauncher
 
                         Console.WriteLine($"Download completed: {filePath}");
 
-                        // Check the file extension to determine whether to unzip or unrar
                         if (cleanFileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                         {
                             UnzipFile(filePath, downloadDirectory);
@@ -125,33 +118,29 @@ namespace XybLauncher
                         {
                             UnrarFile(filePath, downloadDirectory);
                         }
+
+                        _downloadCompleted = true;
+                        return true;
                     }
                     catch (HttpRequestException httpEx)
                     {
                         Console.WriteLine($"HTTP Request error: {httpEx.Message}");
+                        return false;
                     }
                     catch (Exception downloadEx)
                     {
                         Console.WriteLine($"Error during file download: {downloadEx.Message}");
+                        return false;
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error in HandleActionAsync: {ex.Message}");
+                    return false;
                 }
             }
+            return false;
         }
-
-        // Define the object model for the new structure
-        public class BuildInfo
-        {
-            public string Url { get; set; }
-            public string Movie { get; set; }
-            public string Size { get; set; }
-            public string BackgroundImage { get; set; }
-            public string SeasonNumber { get; set; }
-        }
-
 
         private void UnzipFile(string filePath, string extractDirectory)
         {
@@ -168,7 +157,6 @@ namespace XybLauncher
 
                 ZipFile.ExtractToDirectory(filePath, extractPath);
                 Console.WriteLine($"File unzipped to: {extractPath}");
-                // Idk why but its not deleting the zip after unzipping fix it 25.01.25 (old bug)
                 File.Delete(filePath);
             }
             catch (Exception unzipEx)
@@ -209,24 +197,17 @@ namespace XybLauncher
 
         private string CleanFileName(string fileName)
         {
-            // Remove invalid characters
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
             string invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
-
-            // Replace invalid characters with underscores
             string cleanFileName = Regex.Replace(fileName, invalidRegStr, "_");
-
-            // Trim leading/trailing periods and spaces
             cleanFileName = cleanFileName.Trim('.', ' ');
 
-            // Ensure the file name is not empty
             if (string.IsNullOrWhiteSpace(cleanFileName))
             {
                 cleanFileName = "unnamed_file";
             }
 
-            // Truncate if the file name is too long (Windows has a 260 character path limit)
-            int maxFileNameLength = 255; // Maximum file name length
+            int maxFileNameLength = 255;
             if (cleanFileName.Length > maxFileNameLength)
             {
                 string extension = Path.GetExtension(cleanFileName);
@@ -235,97 +216,14 @@ namespace XybLauncher
 
             return cleanFileName;
         }
-
-
-
-
-
-
-
-
-
-        private async Task DownloadBuildAsync(string apiUrl)
-        {
-            try
-            {
-                Console.WriteLine("Starting download...");
-
-                HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
-                response.EnsureSuccessStatusCode();
-
-                string jsonString = await response.Content.ReadAsStringAsync();
-
-                ChoiceContainer choices = JsonConvert.DeserializeObject<ChoiceContainer>(jsonString);
-                if (choices?.Choices == null || choices.Choices.Count == 0)
-                {
-                    Console.WriteLine("No valid choices were returned from the API.");
-                    return;
-                }
-
-                ProcessChoices(choices);
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine("Network error occurred: " + ex.Message);
-            }
-            catch (JsonException ex)
-            {
-                Console.WriteLine("JSON deserialization error: " + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("General error: " + ex.Message);
-            }
-        }
-
-        private void ProcessChoices(ChoiceContainer choices)
-        {
-            foreach (var choice in choices.Choices)
-            {
-                Console.WriteLine($"Choice: {choice.Name}");
-                ExecuteAction(choice.Action);
-            }
-        }
-
-        private void ExecuteAction(string action)
-        {
-            switch (action)
-            {
-                case "Action1":
-                    Console.WriteLine("Performing Action1...");
-                    break;
-                case "Action2":
-                    Console.WriteLine("Performing Action2...");
-                    break;
-                default:
-                    Console.WriteLine("Unknown action");
-                    break;
-            }                               
-        }
-
-
     }
 
-    public class Choice
-    {
-        public string Name { get; set; }
-        public string Action { get; set; }
-    }
-
-    public class ChoiceContainer
-    {
-        public List<Choice> Choices { get; set; }
-    }
-
-    // Define the object model for the new structure
     public class BuildInfo
     {
         public string Url { get; set; }
+        public string Movie { get; set; }
         public string Size { get; set; }
+        public string BackgroundImage { get; set; }
+        public string SeasonNumber { get; set; }
     }
-
-
-
-
-
 }

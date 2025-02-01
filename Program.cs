@@ -1,22 +1,11 @@
-﻿using System.Diagnostics;
-using Newtonsoft.Json;
-using Spectre.Console;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using static Terminal.Gui.Graphs.PathAnnotation;
-using static XybLauncher.BuildDownloader;
-using static XybLauncher.AccountHandler;
-using System.Net.Http;
-using System.Text.Json.Serialization;
+﻿using Spectre.Console;
 
 namespace XybLauncher;
+// TODO Move files related stuff to another file
 
 public static class Program
 {
 
-
-    //Variables
 
     //Variables for Season Selection 
     private static string selectedSeason = null;
@@ -34,9 +23,7 @@ public static class Program
 
         Console.Title = "XYB Launcher CLI";
 
-
         AnsiConsole.Clear();
-
 
         AnsiConsole.Write(
             new FigletText("XYB Launcher CLI")
@@ -47,6 +34,8 @@ public static class Program
         AnsiConsole.Write(new Rule("[blue]Welcome to XYB Launcher CLI[/]").Centered());
         AnsiConsole.MarkupLine("Use the arrow keys [underline blue]UP[/] and [underline blue]DOWN[/] to navigate through the options.");
 
+
+        // REDO
         VersionHandler.LoadSelectedSeason();
         VersionHandler.DisplaySelectedSeason();
         AccountHandler.ShowSelectedAccount();
@@ -112,8 +101,8 @@ public static class Program
                 break;
 
             //case "Exit":
-               // Environment.Exit(1);
-               // break;
+            // Environment.Exit(1);
+            // break;
 
 
             case "Change Account Info":
@@ -143,44 +132,38 @@ public static class Program
                 Main(args);
                 break;
 
+
             case "Download Build":
                 try
                 {
-                    Console.WriteLine("Starting DownloadBuild process...");
-
-                    // Instantiate FilesManager
                     BuildDownloader filesManager = new BuildDownloader();
+                    bool downloadSuccess = await filesManager.HandleActionAsync("DownloadBuild");
 
-
-                    // Call the main logic method in FilesManager
-                    await filesManager.HandleActionAsync("DownloadBuild");
-
-                    // Log after the method call
-                    Console.WriteLine("HandleActionAsync completed.");
-
-                    // Indicate that the process has completed
-                    Console.WriteLine("Download completed successfully. Press Enter to exit.");
-
+                    Console.WriteLine();
+                    Console.WriteLine("Press Enter to return to main menu...");
+                    Console.ReadLine();
+                    AnsiConsole.Clear();  // Clear the console before showing menu again
+                    await Main(args);     // Since Main is async, we need to await it
                 }
                 catch (Exception ex)
                 {
-                    // Log any exceptions that occur
                     Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-                }
-                finally
-                {
-                    // Keep the console window open
+                    Console.WriteLine("Press Enter to return to main menu...");
                     Console.ReadLine();
+                    AnsiConsole.Clear();
+                    await Main(args);
                 }
-                Main(args);
-                break;
+                break;  // Use break instead of return since we're in an async method
+
+
+
 
 
 
             case "Account Manager":
                 AccountHandler.StartAccountManager();
 
-            break;
+                break;
 
             case "Exit":
                 Environment.Exit(0);
@@ -192,30 +175,12 @@ public static class Program
 
 
 
-    public static void MainMenu()
+    public static async Task MainMenu()
     {
-        Program.Main(new string[0]);
+        await Main(new string[0]);
     }
 
 
 
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
