@@ -59,7 +59,7 @@ internal class VersionHandler
             // Check if there is a selected build
             if (!string.IsNullOrEmpty(data.Selected))
             {
-                AnsiConsole.Markup($"Selected Version: [green]{data.Selected}[/]");
+                AnsiConsole.Markup($"Selected Version: [blue]{data.Selected}[/]");
                 Console.WriteLine();
             }
             else
@@ -151,38 +151,25 @@ internal class VersionHandler
         Console.Write("Enter Fortnite season: ");
         string fortniteSeason = Console.ReadLine();
 
-
         var selection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Is the Build Online Test?")
                 .PageSize(3)
-                .AddChoices(new[] {
-                    "Yes",
-                    "No"
-                })
-                .HighlightStyle(new Style(Color.Blue)) // Blue highlight for selected option
+                .AddChoices(new[] { "Yes", "No" })
+                .HighlightStyle(new Style(Color.Blue))
         );
+
         bool isOnlineTest = selection == "Yes";
 
+        AddFortniteVersionEntry(fortnitePath, fortniteSeason, isOnlineTest ? 1 : 0);
+    }
 
-
-
-
-
+    public static void AddFortniteVersionEntry(string path, string season, int onlineTest)
+    {
         // Load existing data or create new structure
-        FortniteVersions data;
-        if (File.Exists(versionsdata))
-        {
-            // Read existing JSON data from the file
-            var jsonData = File.ReadAllText(versionsdata);
-            // Deserialize JSON data into FortniteVersions object
-            data = JsonConvert.DeserializeObject<FortniteVersions>(jsonData) ?? new FortniteVersions();
-        }
-        else
-        {
-            // If the file doesn't exist, create a new FortniteVersions object
-            data = new FortniteVersions();
-        }
+        FortniteVersions data = File.Exists(versionsdata)
+            ? JsonConvert.DeserializeObject<FortniteVersions>(File.ReadAllText(versionsdata)) ?? new FortniteVersions()
+            : new FortniteVersions();
 
         // Determine the new index
         int newIndex = data.Versions.Count + 1;
@@ -191,22 +178,21 @@ internal class VersionHandler
         var newVersion = new FortniteVersion
         {
             Index = newIndex,
-            Season = fortniteSeason,
-            Path = fortnitePath,
-            IsOnlineTest = isOnlineTest
+            Season = season,
+            Path = path,
+            IsOnlineTest = onlineTest == 1
         };
 
         // Add the new version to the list of versions
         data.Versions.Add(newVersion);
 
         // Serialize the updated data back to JSON
-        var updatedJson = JsonConvert.SerializeObject(data, Formatting.Indented);
-
-        // Write the updated JSON data back to the file
-        File.WriteAllText(versionsdata, updatedJson);
+        File.WriteAllText(versionsdata, JsonConvert.SerializeObject(data, Formatting.Indented));
 
         Console.WriteLine($"Fortnite version added successfully with index {newIndex}!");
     }
+
+
 
 
 

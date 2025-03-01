@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using SharpCompress.Compressors.Filters;
 using Spectre.Console;
 using static XybLauncher.AccountHandler;
 
@@ -25,7 +26,7 @@ namespace XybLauncher
             // Display the selected account's display name, or a message if no account is selected
             if (selectedAccount != null)
             {
-                AnsiConsole.MarkupLine($"Selected Account: [bold green]{selectedAccount.DisplayName}[/]");
+                AnsiConsole.MarkupLine($"Selected Account: [blue]{selectedAccount.DisplayName}[/]");
             }
             else
             {
@@ -33,7 +34,7 @@ namespace XybLauncher
             }
         }
 
-        public static void StartAccountManager()
+        public static async void StartAccountManager()
         {
             EnsureDirectoryExists();
 
@@ -57,10 +58,9 @@ namespace XybLauncher
                     case "View selected account":
                         ViewSelectedAccount(accountData);
                         break;
-                    case "Exit":
-                        AnsiConsole.MarkupLine("[bold green]Exiting...[/]");
-                        Environment.Exit(0);
-                        return;
+                    case "Exit to Main Menu":
+                       await Program.MainMenu();
+                        break;
                 }
 
                 // Save the updated data to a file
@@ -130,11 +130,11 @@ namespace XybLauncher
                     .AddColumn("Value")
                     .AddRow("Index", selectedAccount.Index.ToString())
                     .AddRow("Display Name", selectedAccount.DisplayName)
-                    .AddRow("Email", selectedAccount.Email)
-                    .AddRow("Password", selectedAccount.Password));
+                    .AddRow("Email", selectedAccount.Email));
+                   // .AddRow("Password", selectedAccount.Password));
             }
             else
-            {
+            {   
                 AnsiConsole.MarkupLine("[bold red]No account is selected or the selected account does not exist.[/]");
             }
         }

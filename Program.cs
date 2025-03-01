@@ -1,11 +1,15 @@
-﻿using Spectre.Console;
+﻿using System.Diagnostics;
+using System.Reflection;
+using NLog;
+using Spectre.Console;
+using XybLauncher.Other;
 
 namespace XybLauncher;
 // TODO Move files related stuff to another file
 
 public static class Program
 {
-
+    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
     //Variables for Season Selection 
     private static string selectedSeason = null;
@@ -34,12 +38,16 @@ public static class Program
         AnsiConsole.Write(new Rule("[blue]Welcome to XYB Launcher CLI[/]").Centered());
         AnsiConsole.MarkupLine("Use the arrow keys [underline blue]UP[/] and [underline blue]DOWN[/] to navigate through the options.");
 
+        Task.Run(() => DllsHandler.DownloadDefaultRedirects());
+        Task.Run(() => DllsHandler.DownloadGameServers());
+        ConfigHandler.ChkConfig();
+
 
         // REDO
         VersionHandler.LoadSelectedSeason();
         VersionHandler.DisplaySelectedSeason();
         AccountHandler.ShowSelectedAccount();
-
+        DllsHandler.ShowSelectedLibraries();
 
 
 
@@ -52,11 +60,11 @@ public static class Program
 
         var option = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("[blue]What do you want to do[/]?")
+                .Title("[blue]What do you want to do[/]")
                 .PageSize(6)
                 .AddChoices(new[]
                 {
-                    "Start Client" ,"Start Server", "Add Fortnite Version", "Select Fortnite Version","Build Manager", "Download Build", "Account Manager", "Exit",
+                    "Start Client" ,"Start Server", "Add Fortnite Version", "Select Fortnite Version","Build Manager", "Download Build", "Account Manager", "Settings" , "Exit",
                 }));
 
         switch (option)
@@ -64,7 +72,7 @@ public static class Program
             // Client Phase
             case "Start Client":
                 AnsiConsole.Clear();
-                AnsiConsole.MarkupLine("Starting the client");
+                Logger.Info("Starting the client");
                 ClientManager.Test(args);
                 break;
 
@@ -100,25 +108,6 @@ public static class Program
                 }
                 break;
 
-            //case "Exit":
-            // Environment.Exit(1);
-            // break;
-
-
-            case "Change Account Info":
-                AnsiConsole.MarkupLine("[red]Please Enter Your Email and Password![/]");
-
-                Console.Write("Email: ");
-                string email = Console.ReadLine();
-                File.WriteAllText(appdata + "\\email.txt", email);
-
-                Console.Write("Password: ");
-                string password = Console.ReadLine();
-                File.WriteAllText(appdata + "\\password.txt", password);
-
-                AnsiConsole.MarkupLine("[green]Email and Password Saved![/]");
-                break;
-
             case "Add Fortnite Version":
                 VersionHandler.AddFortniteVersion();
                 AnsiConsole.Clear();
@@ -129,10 +118,11 @@ public static class Program
             case "Select Fortnite Version":
                 VersionHandler.SelectFortniteVersion();
                 AnsiConsole.Clear();
-                Main(args);
+                Program.MainMenu();
                 break;
 
 
+                // Fix to make it same as the account manager case
             case "Download Build":
                 try
                 {
@@ -140,15 +130,15 @@ public static class Program
                     bool downloadSuccess = await filesManager.HandleActionAsync("DownloadBuild");
 
                     Console.WriteLine();
-                    Console.WriteLine("Press Enter to return to main menu...");
+                    Logger.Info("Press Enter to return to main menu...");
                     Console.ReadLine();
                     AnsiConsole.Clear();  // Clear the console before showing menu again
                     await Main(args);     // Since Main is async, we need to await it
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-                    Console.WriteLine("Press Enter to return to main menu...");
+                    Logger.Error($"An unexpected error occurred: {ex.Message}");
+                    Logger.Info("Press Enter to return to main menu...");
                     Console.ReadLine();
                     AnsiConsole.Clear();
                     await Main(args);
@@ -156,19 +146,21 @@ public static class Program
                 break;  // Use break instead of return since we're in an async method
 
 
+            case "Settings":
+                ConfigHandler.EditConfig();
+                await MainMenu();  // Calling just mainmenu didn't work so we needed a await
+                break;
 
 
 
 
             case "Account Manager":
                 AccountHandler.StartAccountManager();
-
+                await MainMenu();
                 break;
 
             case "Exit":
                 Environment.Exit(0);
-
-
                 break;
         }
     }
@@ -177,6 +169,7 @@ public static class Program
 
     public static async Task MainMenu()
     {
+        AnsiConsole.Clear();
         await Main(new string[0]);
     }
 

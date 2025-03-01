@@ -14,10 +14,8 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 - **Lightweight Design**: Minimal resource usage while maintaining full functionality
 
 ## Installation Guide
-
 1. Go to the [Releases](https://github.com/BeRightBack0/XybLauncherCLI/releases) page
 2. Choose your preferred installation method:
-   - `.msi` installer: Download and run the installer
    - `.zip` archive: Download and extract to your desired location
 
 ## Usage Tutorial
@@ -26,38 +24,46 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 1. Launch XybLauncherCLI after installation
 2. Use the account system to add your account
 
-### Downloading a Build (Broken in 1.1.0)
+### Downloading a Build (Works Kinda)
 1. From the main menu, select "Download Build"
 2. Choose your desired Fortnite version from the version selector
 3. Enter the directory to where you want the build to download
 4. Wait for the download to complete
-5. Now go to the directory your downloaded build is located and delete the .zip file (i broke the deletion of the .zip im gonna fix it in the next update sorry)
+5. Now you can add your build to your versions
 
 ### Launching the Game
-1. Select "Launch Game" from the main menu
-2. Choose your desired build from installed versions
-3. Select your account
+1. Choose your desired build from installed versions
+2. Select your account
+3. Select "Start Client" from the main menu
 4. Wait for the game to start
 
 ## Compatibility
 
 - Tested and verified working up to version 8.51
-- Launcher automaticly downloads redirect that redirects to 127.0.0.1:3531
+- Season 7. doesnt work (i will fix it) 
+- Launcher automaticly downloads redirect that redirects to 127.0.0.1:3531 (Probably Broken rn)
 - Support for newer versions is being actively developed
 
 ## Upcoming Features
-
-- [x] Build Download System
+- [ ] Optimization
+- [x] Build Download System (Rewrite Later)
 - [x] Account Management
 - [x] Version Selection
 - [ ] Run OT In Game 
-- [ ] Custom Redirect Support (Next Update)
-- [ ] Custom DLL Injection Support (Next Update)
+- [x] Custom Redirect Support (Next Update)
 - [ ] Server Hosting Capabilities
 - [ ] PAK File Mounting
 - [ ] Graphical User Interface
-- [ ] Custom Server DLL Support
-- [ ] Automatic Version Adding After Downloading a Build
+- [x] Custom Server DLL Support (More Later)
+- [ ] Automatic Version Adding After Downloading a Build (Next Update)
+- [ ] Version Manager Rewrite
+
+## Known Issues
+* Build downloader not working (we are transfering from simplyblk to selfhosted solution)
+* More than one fn shipping is breaking the launcher (will be fixed next update)
+
+
+
 
 ## Contributing
 

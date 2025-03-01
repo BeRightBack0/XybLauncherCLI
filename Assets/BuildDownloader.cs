@@ -11,7 +11,8 @@ using System.Text.RegularExpressions;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.Zip;
-using static XybLauncher.Assets.Errors;
+using static XybLauncher.Assets.Logging;
+using NLog;
 
 namespace XybLauncher
 {
@@ -19,6 +20,7 @@ namespace XybLauncher
     {
         private readonly HttpClient _httpClient;
         private bool _downloadCompleted = false;
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public BuildDownloader()
         {
@@ -40,7 +42,7 @@ namespace XybLauncher
 
                     if (buildData == null || buildData.Count == 0)
                     {
-                        Console.WriteLine("API is down");
+                        Logger.Error("API is down");
                         return false;
                     }
 
@@ -58,12 +60,12 @@ namespace XybLauncher
                     string versionKey = selectedVersion.Split(' ')[0];
                     var versionInfo = buildData[versionKey].First();
 
-                    Console.WriteLine("Enter the directory where you want to save the build:");
+                    Logger.Info("Enter the directory where you want to save the build:");
                     string downloadDirectory = Console.ReadLine();
 
                     if (string.IsNullOrWhiteSpace(downloadDirectory) || !Directory.Exists(downloadDirectory))
                     {
-                        Console.WriteLine("Invalid directory. Operation aborted.");
+                        Logger.Error("Invalid directory. Operation aborted.");
                         return false;
                     }
 
@@ -78,13 +80,23 @@ namespace XybLauncher
 
                         if (!responseMessage.IsSuccessStatusCode)
                         {
-                            Console.WriteLine($"[red]ERROR[/] Download link is not valid");
+                            Logger.Error($"[red]ERROR[/] Download link is not valid");
                             return false;
                         }
 
                         var totalBytes = responseMessage.Content.Headers.ContentLength ?? -1L;
 
                         await AnsiConsole.Progress()
+                            .HideCompleted(true)
+                            .AutoRefresh(true)
+                            .Columns(
+                                new TaskDescriptionColumn(),  // Task description
+                                new ProgressBarColumn { CompletedStyle = Style.Parse("green") },  // Green progress bar
+                                new PercentageColumn(),  // Show percentage
+                                new DownloadedColumn(),         // Downloaded
+                                new TransferSpeedColumn(),     // Transfer speed
+                                new SpinnerColumn(Spinner.Known.Dots)  // Spinner for visual feedback
+    )
                             .StartAsync(async ctx =>
                             {
                                 var task = ctx.AddTask($"[green]LOG[/] Downloading {cleanFileName}", maxValue: totalBytes > 0 ? totalBytes : 100);
@@ -95,20 +107,27 @@ namespace XybLauncher
                                 int bytesRead;
                                 long totalBytesRead = 0;
 
+
+                                // Set MaxValue only once to prevent flickering
+                                if (totalBytes > 0)
+                                {
+                                    task.MaxValue = totalBytes;
+                                }
+
+
                                 while ((bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                                 {
                                     await fileStream.WriteAsync(buffer, 0, bytesRead);
                                     totalBytesRead += bytesRead;
 
                                     task.Increment(bytesRead);
-                                    if (totalBytes > 0)
-                                    {
-                                        task.MaxValue = totalBytes;
-                                    }
                                 }
+
+                                task.Value = task.MaxValue;  // Ensure full completion
+
                             });
 
-                        Console.WriteLine($"Download completed: {filePath}");
+                       Logger.Info($"Download completed: {filePath}");
 
                         if (cleanFileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                         {
@@ -124,29 +143,30 @@ namespace XybLauncher
                     }
                     catch (HttpRequestException httpEx)
                     {
-                        Console.WriteLine($"HTTP Request error: {httpEx.Message}");
+                        Logger.Error($"HTTP Request error: {httpEx.Message}");
                         return false;
                     }
                     catch (Exception downloadEx)
                     {
-                        Console.WriteLine($"Error during file download: {downloadEx.Message}");
+                        Logger.Error($"Error during file download: {downloadEx.Message}");
                         return false;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error in HandleActionAsync: {ex.Message}");
+                    Logger.Error($"Error in HandleActionAsync: {ex.Message}");
                     return false;
                 }
             }
             return false;
+
         }
 
         private void UnzipFile(string filePath, string extractDirectory)
         {
             try
             {
-                Console.WriteLine("Unzipping the file...");
+                Logger.Info("Unzipping the file...");
 
                 string extractPath = Path.Combine(extractDirectory, Path.GetFileNameWithoutExtension(filePath));
 
@@ -156,12 +176,12 @@ namespace XybLauncher
                 }
 
                 ZipFile.ExtractToDirectory(filePath, extractPath);
-                Console.WriteLine($"File unzipped to: {extractPath}");
+                Logger.Info($"File unzipped to: {extractPath}");
                 File.Delete(filePath);
             }
             catch (Exception unzipEx)
             {
-                Console.WriteLine($"Error during unzipping: {unzipEx.Message}");
+                Logger.Error($"Error during unzipping: {unzipEx.Message}");
             }
         }
 
@@ -169,7 +189,7 @@ namespace XybLauncher
         {
             try
             {
-                Console.WriteLine("Unpacking the build...");
+                Logger.Info("Unpacking the build...");
 
                 string extractPath = Path.Combine(extractDirectory, Path.GetFileNameWithoutExtension(filePath));
 
@@ -187,11 +207,11 @@ namespace XybLauncher
                         Overwrite = true
                     });
                 }
-                Console.WriteLine($"Build unpacked to: {extractPath}");
+                Logger.Info($"Build unpacked to: {extractPath}");
             }
             catch (Exception unrarEx)
             {
-                Console.WriteLine($"Error during unpacking: {unrarEx.Message}");
+                Logger.Error($"Error during unpacking: {unrarEx.Message}");
             }
         }
 

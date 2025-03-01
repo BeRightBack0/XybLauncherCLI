@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NLog;
 using Spectre.Console;
 using System;
 using System.Diagnostics;
@@ -10,6 +11,8 @@ namespace XybLauncher
 {
     public class ClientManager
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private static string versionsdata = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "XybLauncher", "versions.json");
 
         private static Process _fnProcess;
@@ -46,7 +49,7 @@ namespace XybLauncher
             if (!File.Exists(fortniteExecutable))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"\"{fortniteExecutable}\" is missing!");
+                Logger.Error($"\"{fortniteExecutable}\" is missing!");
                 Console.ReadKey();
                 Program.MainMenu();
             }
@@ -66,7 +69,7 @@ namespace XybLauncher
             string password = accountParser.GetAccountInfo("password");
 
             CustomArguments customArgs = new CustomArguments();
-            string defaultargs = customArgs.GetDefaultArgs();
+            string defaultargs = customArgs.GetDefaultArgs(email, password);
 
             // Initialize Fortnite process with start info
             _fnProcess = new Process

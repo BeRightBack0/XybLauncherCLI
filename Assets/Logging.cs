@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NLog;
 
 
 // Its not being used by anything for now 
 
 namespace XybLauncher.Assets
 {
-    public class Errors
+    public class Logging
     {
         public static class ErrorCodes
         {
@@ -150,6 +151,11 @@ namespace XybLauncher.Assets
 
 
         // return new LoginResult(ErrorCodes.ACCOUNT_LOCKED); Example ok ok ok 
+
+
+
+
+
 
 
 

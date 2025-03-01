@@ -65,19 +65,16 @@ namespace XybLauncher
                 {
                     Win32.WriteProcessMemory(_fnHandle, _verifyPeerAddress, _verifyPeerPatched, _verifyPeerPatched.Length, out IntPtr bytesWritten); // Write patched CURLOPT_SSL_VERIFYPEER code
 
-#if DEBUG
                     // Log how many bytes we wrote
                     Console.WriteLine($"Patched {bytesWritten} byte(s) in CURLOPT_SSL_VERIFYPEER.");
                     Console.WriteLine();
-#endif
                 }
                 catch (Exception)
                 {
-#if DEBUG
+
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"An error has occured while attempting to patch CURLOPT_SSL_VERIFYPEER. Message = {e.Message}");
+                   // Console.WriteLine($"An error has occured while attempting to patch CURLOPT_SSL_VERIFYPEER. Message = {Message}");
                     Console.WriteLine();
-#endif
                 }
 
                 noSslPinning = false; // Set noSslPinning to false to make sure we don't trigger this again!
