@@ -58,7 +58,7 @@ namespace XybLauncher
                     case "View selected account":
                         ViewSelectedAccount(accountData);
                         break;
-                    case "Exit to Main Menu":
+                    case "Exit":
                        await Program.MainMenu();
                         break;
                 }
