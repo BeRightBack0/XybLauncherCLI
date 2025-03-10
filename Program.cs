@@ -3,6 +3,8 @@ using System.Reflection;
 using NLog;
 using Spectre.Console;
 using XybLauncher.Other;
+using System;
+using System.Threading;
 
 namespace XybLauncher;
 // TODO Move files related stuff to another file
@@ -29,10 +31,13 @@ public static class Program
 
         AnsiConsole.Clear();
 
+
+        // Display Figlet text directly
         AnsiConsole.Write(
             new FigletText("XYB Launcher CLI")
                 .Centered()
                 .Color(Color.Blue)
+                .Justify(Justify.Center)
         );
 
         AnsiConsole.Write(new Rule("[blue]Welcome to XYB Launcher CLI[/]").Centered());
