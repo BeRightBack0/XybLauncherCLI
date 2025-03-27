@@ -19,12 +19,13 @@ namespace XybLauncher
     public class BuildDownloader
     {
         private readonly HttpClient _httpClient;
-        private bool _downloadCompleted = false;
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private bool _downloadCompleted;
 
         public BuildDownloader()
         {
             _httpClient = new HttpClient();
+            _downloadCompleted = false;
         }
 
         public async Task<bool> HandleActionAsync(string action)
@@ -127,7 +128,8 @@ namespace XybLauncher
 
                             });
 
-                       Logger.Info($"Download completed: {filePath}");
+                        Logger.Info($"Download completed: {filePath}");
+                        _downloadCompleted = true; // Set the field to true when download is completed
 
                         if (cleanFileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                         {
@@ -138,7 +140,6 @@ namespace XybLauncher
                             UnrarFile(filePath, downloadDirectory);
                         }
 
-                        _downloadCompleted = true;
                         return true;
                     }
                     catch (HttpRequestException httpEx)

@@ -26,7 +26,7 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 1. Launch XybLauncherCLI after installation
 2. Use the account system to add your account
 
-### Downloading a Build (Works Kinda)
+### Downloading a Build (Broken Right Now)
 1. From the main menu, select "Download Build"
 2. Choose your desired Fortnite version from the version selector
 3. Enter the directory to where you want the build to download
@@ -47,18 +47,19 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 - Support for newer versions is being actively developed
 
 ## Upcoming Features
-- [ ] Optimization
-- [x] Build Download System (Rewrite Later)
+- [x] Optimization
+- [x] Build Download System (Broken For Now)
 - [x] Account Management
 - [x] Version Selection
 - [ ] Run OT In Game 
 - [x] Custom Redirect Support (Next Update)
 - [ ] Server Hosting Capabilities
-- [ ] PAK File Mounting
+- [ ] PAK File Mounting (idk about this but ok)
 - [ ] Graphical User Interface
-- [x] Custom Server DLL Support (More Later)
-- [ ] Automatic Version Adding After Downloading a Build (Next Update)
+- [x] Custom Server DLL Support (More Servers Later Later)
+- [ ] Automatic Version Adding After Downloading a Build (Delayed)
 - [ ] Version Manager Rewrite
+- [ ] Auto Updater
 
 ## Known Issues
 * Build downloader not working (we are transfering from simplyblk to selfhosted solution)

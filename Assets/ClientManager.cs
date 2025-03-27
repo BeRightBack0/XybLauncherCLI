@@ -85,6 +85,8 @@ namespace XybLauncher
             };
 
             _fnProcess.Start(); // Start Fortnite client process
+
+            // Change it to the selected dll path
             XybLauncher.Injector.Inject(_fnProcess.Id, Path.Combine(appdata, "Cobalt.dll"));
 
             // Set up our async readers

@@ -43,9 +43,6 @@ public static class Program
         AnsiConsole.Write(new Rule("[blue]Welcome to XYB Launcher CLI[/]").Centered());
         AnsiConsole.MarkupLine("Use the arrow keys [underline blue]UP[/] and [underline blue]DOWN[/] to navigate through the options.");
 
-        Task.Run(() => DllsHandler.DownloadDefaultRedirects());
-        Task.Run(() => DllsHandler.DownloadGameServers());
-        ConfigHandler.ChkConfig();
 
 
         // REDO
@@ -54,6 +51,21 @@ public static class Program
         AccountHandler.ShowSelectedAccount();
         DllsHandler.ShowSelectedLibraries();
 
+
+        Thread backgroundThread = new Thread(CheckFiles);
+        backgroundThread.IsBackground = true;  // Stops when the main thread exits
+        backgroundThread.Priority = ThreadPriority.Normal;
+        backgroundThread.Name = "XybLauncherBackgroundThread";
+        backgroundThread.Start();
+
+
+        static void CheckFiles()
+        {
+            Logger.Trace($"Running on thread: {Thread.CurrentThread.Name} (ID: {Thread.CurrentThread.ManagedThreadId})");
+            DllsHandler.DownloadDefaultRedirectsAsync();
+            DllsHandler.DownloadGameServersAsync();
+            ConfigHandler.ChkConfig();
+        }
 
 
 
@@ -66,10 +78,10 @@ public static class Program
         var option = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[blue]What do you want to do[/]")
-                .PageSize(6)
+                .PageSize(8)
                 .AddChoices(new[]
                 {
-                    "Start Client" ,"Start Server", "Add Fortnite Version", "Select Fortnite Version","Build Manager", "Download Build", "Account Manager", "Settings" , "Exit",
+                    "Start Client" , "Add Fortnite Version", "Select Fortnite Version", "Build Manager", "Download Build", "Account Manager", "Settings" , "Exit",
                 }));
 
         switch (option)

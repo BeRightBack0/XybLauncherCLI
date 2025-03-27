@@ -1,11 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using IniParser;
+﻿using IniParser;
 using IniParser.Model;
 using NLog;
 using Spectre.Console;
+using System.Net;
 
 namespace XybLauncher.Other
 {
@@ -13,6 +10,7 @@ namespace XybLauncher.Other
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        // This needs to be redone to be easier to change config versions without downloading new version
         private static string configfile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "XybLauncher/config.ini");
         private static string currentConfigVersion = "1.1.2";  // Default compiled version
         private static string latestConfigVersion = "1.1.2"; // Will be updated if an online version is found
@@ -116,6 +114,8 @@ namespace XybLauncher.Other
             }
         }
 
+
+        // Config options 
         public static void EditConfig()
         {
             // Sections to hide
@@ -125,10 +125,22 @@ namespace XybLauncher.Other
                 "VersionInfo"
             };
 
-            // Settings that need a int
+            // Settings that need an int
             var integerSettings = new Dictionary<string, (int Min, int Max)>
             {
                  {"ServerPort", (1024, 65535)}
+            };
+
+            // Settings that are booleans (true/false)
+            var booleanSettings = new HashSet<string>
+            {
+                // Add your boolean settings here, for example:
+                "DebugMode",
+                "Logging",
+                "EnableLogging",
+                "CheckForUpdates",
+                "TunnelEnabled",
+                "BackgroundTask"
             };
 
             while (true)
@@ -184,8 +196,9 @@ namespace XybLauncher.Other
                 string currentValue = data[section][key].ToString()?.Trim('"') ?? "N/A";
                 AnsiConsole.MarkupLine($"[green]Current Value: {currentValue}[/]");
 
-                // Check if this setting requires integer validation
+                // Check what type of setting this is
                 var isIntSetting = integerSettings.TryGetValue(key, out var range);
+                var isBoolSetting = booleanSettings.Contains(key);
 
                 if (isIntSetting)
                 {
@@ -210,6 +223,33 @@ namespace XybLauncher.Other
                             AnsiConsole.MarkupLine($"[red]Please enter a valid number between {range.Min} and {range.Max}[/]");
                         }
                     }
+                }
+                else if (isBoolSetting)
+                {
+                    // Handle boolean settings with a toggle
+                    var boolOptions = new[] { "true", "false" };
+
+                    // Try to parse current value to determine initial selection index
+                    bool currentBool = false;
+                    if (Boolean.TryParse(currentValue.ToLower(), out bool parsedValue))
+                    {
+                        currentBool = parsedValue;
+                    }
+
+                    // Arrange options with current value first
+                    var arrangedOptions = currentBool
+                        ? new[] { "true", "false" }
+                        : new[] { "false", "true" };
+
+                    var newValue = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title("[blue]Select a value:[/]")
+                            .PageSize(3)
+                            .AddChoices(arrangedOptions));
+
+                    data[section][key] = newValue;
+                    parser.WriteFile(configfile, data);
+                    AnsiConsole.MarkupLine($"[green]✅ Updated {section}.{key} to: {newValue}[/]");
                 }
                 else
                 {
@@ -278,13 +318,16 @@ namespace XybLauncher.Other
                         options.AddRange(optionsStr.Split(',').Select(o => o.Trim()));
                         break;
                     }
+                    else if (cleanComment.StartsWith("type=bool", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // If comment indicates this is a boolean type
+                        options.AddRange(new[] { "true", "false" });
+                        break;
+                    }
                 }
             }
 
             return options.Select(o => o.Trim().Trim('"')).Distinct().ToList();
         }
-
-
-
     }
 }
