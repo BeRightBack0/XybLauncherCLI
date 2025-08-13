@@ -31,39 +31,43 @@ XybLauncherCLI is a lightweight Command Line Interface launcher for OG Fortnite,
 2. Choose your desired Fortnite version from the version selector
 3. Enter the directory to where you want the build to download
 4. Wait for the download to complete
-5. Now you can add your build to your versions
+5. Now you can add your build to your versions (automatic in the future)
+
+### Adding a Account
+1. From the main menu, select "Account Manager"
+2. Select "Add new Account"
+3. Fill out Account information
+4. Select your Account
 
 ### Launching the Game
 1. Choose your desired build from installed versions
-2. Select your account
 3. Select "Start Client" from the main menu
 4. Wait for the game to start
 
 ## Compatibility
 
 - Tested and verified working up to version 8.51
-- Season 7. doesnt work (i will fix it) 
-- Launcher automaticly downloads redirect that redirects to 127.0.0.1:3531 (Probably Broken rn)
+- Launcher automaticly downloads redirects and gameservers (selection doesnt work)
 - Support for newer versions is being actively developed
 
 ## Upcoming Features
 - [x] Optimization
-- [x] Build Download System (Broken For Now)
+- [x] Build Download System
 - [x] Account Management
 - [x] Version Selection
 - [ ] Run OT In Game 
-- [x] Custom Redirect Support (Next Update)
+- [x] Custom Redirect Support (Delayed)
 - [ ] Server Hosting Capabilities
 - [ ] PAK File Mounting (idk about this but ok)
 - [ ] Graphical User Interface
-- [x] Custom Server DLL Support (More Servers Later Later)
+- [x] Custom Server DLL Support (More Servers Later)
 - [ ] Automatic Version Adding After Downloading a Build (Delayed)
-- [ ] Version Manager Rewrite
+- [ ] Version Manager Rewrite (Next)
 - [ ] Auto Updater
+- [ ] GameServer Tunneling
 
 ## Known Issues
-* Build downloader not working (we are transfering from simplyblk to selfhosted solution)
-* More than one fn shipping is breaking the launcher (will be fixed next update)
+* None i think
 
 
 

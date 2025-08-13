@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using XybLauncher.Other;
 
 namespace XybLauncher
 {
@@ -86,8 +87,13 @@ namespace XybLauncher
 
             _fnProcess.Start(); // Start Fortnite client process
 
-            // Change it to the selected dll path
-            XybLauncher.Injector.Inject(_fnProcess.Id, Path.Combine(appdata, "Cobalt.dll"));
+            // im too lazy to implement so it will change the dll depending on the ot selection
+            // Injector.Inject(_fnProcess.Id, Path.Combine(appdata, "Cobalt.dll"));
+            //System.Threading.Thread.Sleep(15000); // 15000 ms = 15 seconds
+            Injector.Inject(_fnProcess.Id, Path.Combine(appdata, "Cobalt.dll"));
+
+
+
 
             // Set up our async readers
             AsyncStreamReader asyncOutputReader = new AsyncStreamReader(_fnProcess.StandardOutput);

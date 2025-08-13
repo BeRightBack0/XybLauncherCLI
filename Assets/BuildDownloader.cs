@@ -34,6 +34,7 @@ namespace XybLauncher
             {
                 try
                 {
+                    string apiUrl2 = "https://api.xybnetwork.xyz//builds";
                     string apiUrl = "https://pastebin.com/raw/GbaitDKE";
                     using HttpClient client = new HttpClient();
                     HttpResponseMessage response = await client.GetAsync(apiUrl);
@@ -79,6 +80,7 @@ namespace XybLauncher
                         using var httpClient = new HttpClient();
                         var responseMessage = await httpClient.GetAsync(versionInfo.Url, HttpCompletionOption.ResponseHeadersRead);
 
+                        // Add Fallback links to cdn.xybnetwork.xyz
                         if (!responseMessage.IsSuccessStatusCode)
                         {
                             Logger.Error($"[red]ERROR[/] Download link is not valid");
@@ -91,12 +93,12 @@ namespace XybLauncher
                             .HideCompleted(true)
                             .AutoRefresh(true)
                             .Columns(
-                                new TaskDescriptionColumn(),  // Task description
-                                new ProgressBarColumn { CompletedStyle = Style.Parse("green") },  // Green progress bar
-                                new PercentageColumn(),  // Show percentage
-                                new DownloadedColumn(),         // Downloaded
-                                new TransferSpeedColumn(),     // Transfer speed
-                                new SpinnerColumn(Spinner.Known.Dots)  // Spinner for visual feedback
+                                new TaskDescriptionColumn(),  
+                                new ProgressBarColumn { CompletedStyle = Style.Parse("green") },
+                                new PercentageColumn(),
+                                new DownloadedColumn(),
+                                new TransferSpeedColumn(),
+                                new SpinnerColumn(Spinner.Known.Dots)
     )
                             .StartAsync(async ctx =>
                             {
@@ -133,11 +135,11 @@ namespace XybLauncher
 
                         if (cleanFileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                         {
-                            UnzipFile(filePath, downloadDirectory);
+                            UnzipBuild(filePath, downloadDirectory);
                         }
                         else if (cleanFileName.EndsWith(".rar", StringComparison.OrdinalIgnoreCase))
                         {
-                            UnrarFile(filePath, downloadDirectory);
+                            UnrarBuild(filePath, downloadDirectory);
                         }
 
                         return true;
@@ -163,58 +165,83 @@ namespace XybLauncher
 
         }
 
-        private void UnzipFile(string filePath, string extractDirectory)
+        private void UnzipBuild(string filePath, string extractDirectory)
         {
             try
             {
-                Logger.Info("Unzipping the file...");
+                AnsiConsole.MarkupLine("[yellow]Unpacking the Build...[/]");
 
                 string extractPath = Path.Combine(extractDirectory, Path.GetFileNameWithoutExtension(filePath));
-
                 if (!Directory.Exists(extractPath))
-                {
                     Directory.CreateDirectory(extractPath);
+
+                using (var archive = ZipFile.OpenRead(filePath))
+                {
+                    int total = archive.Entries.Count;
+                    int current = 0;
+
+                    foreach (var entry in archive.Entries)
+                    {
+                        string destinationPath = Path.Combine(extractPath, entry.FullName);
+                        Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
+
+                        if (!string.IsNullOrEmpty(entry.Name))
+                            entry.ExtractToFile(destinationPath, true);
+
+                        current++;
+                        int percent = (int)(current * 100f / total);
+                        AnsiConsole.Markup($"\r[green]Progress:[/] {percent}%   ");
+                    }
                 }
 
-                ZipFile.ExtractToDirectory(filePath, extractPath);
-                Logger.Info($"File unzipped to: {extractPath}");
+                AnsiConsole.WriteLine(); // Final newline
+                AnsiConsole.MarkupLine($"[green]Build unpacked to:[/] [underline]{extractDirectory}[/]");
                 File.Delete(filePath);
             }
-            catch (Exception unzipEx)
+            catch (Exception ex)
             {
-                Logger.Error($"Error during unzipping: {unzipEx.Message}");
+                AnsiConsole.MarkupLine($"[red]Error during unpacking:[/] {ex.Message}");
             }
         }
 
-        private void UnrarFile(string filePath, string extractDirectory)
+
+        private void UnrarBuild(string filePath, string extractDirectory)
         {
             try
             {
-                Logger.Info("Unpacking the build...");
+                AnsiConsole.MarkupLine("[yellow]Unpacking the build...[/]");
 
                 string extractPath = Path.Combine(extractDirectory, Path.GetFileNameWithoutExtension(filePath));
-
                 if (!Directory.Exists(extractPath))
-                {
                     Directory.CreateDirectory(extractPath);
-                }
 
                 using var archive = RarArchive.Open(filePath);
-                foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+                var entries = archive.Entries.Where(e => !e.IsDirectory).ToList();
+                int total = entries.Count;
+                int current = 0;
+
+                foreach (var entry in entries)
                 {
                     entry.WriteToDirectory(extractPath, new SharpCompress.Common.ExtractionOptions
                     {
                         ExtractFullPath = true,
                         Overwrite = true
                     });
+
+                    current++;
+                    int percent = (int)(current * 100f / total);
+                    AnsiConsole.Markup($"\r[green]Progress:[/] {percent}%   ");
                 }
-                Logger.Info($"Build unpacked to: {extractPath}");
+
+                AnsiConsole.WriteLine(); // Final newline
+                AnsiConsole.MarkupLine($"[green]Build unpacked to:[/] [underline]{extractPath}[/]");
             }
             catch (Exception unrarEx)
             {
-                Logger.Error($"Error during unpacking: {unrarEx.Message}");
+                AnsiConsole.MarkupLine($"[red]Error during unpacking:[/] {unrarEx.Message}");
             }
         }
+
 
         private string CleanFileName(string fileName)
         {

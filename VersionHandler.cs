@@ -151,6 +151,8 @@ internal class VersionHandler
         Console.Write("Enter Fortnite season: ");
         string fortniteSeason = Console.ReadLine();
 
+
+        // This should be changed to automatically detect if the build is 32bit if yes then use online test args if no then use default ones
         var selection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Is the Build Online Test?")
@@ -198,7 +200,7 @@ internal class VersionHandler
 
 
 
-
+    // Idk if its used but i think its not so maybe clean it up later
     public static void LoadSelectedSeason()
     {
         // Load the selected season and path from a file if it exists
@@ -211,12 +213,6 @@ internal class VersionHandler
                 selectedPath = parts[1];
             }
         }
-    }
-
-    static void SaveSelectedSeason()
-    {
-        // Save the selected season and path to a file
-        File.WriteAllText(selectedSeasonFilePath, $"{selectedSeason} {selectedPath}");
     }
 
 

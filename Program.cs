@@ -13,11 +13,6 @@ public static class Program
 {
     private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-    //Variables for Season Selection 
-    private static string selectedSeason = null;
-    private static string selectedSeasonFilePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher/selectedseason.json";
-    private static string selectedPath = null;
-    private static string versionsdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\XybLauncher/versions.json";
 
 
 
@@ -39,7 +34,6 @@ public static class Program
                 .Color(Color.Blue)
                 .Justify(Justify.Center)
         );
-
         AnsiConsole.Write(new Rule("[blue]Welcome to XYB Launcher CLI[/]").Centered());
         AnsiConsole.MarkupLine("Use the arrow keys [underline blue]UP[/] and [underline blue]DOWN[/] to navigate through the options.");
 
@@ -100,29 +94,6 @@ public static class Program
 
                 AnsiConsole.MarkupLine("Starting the Server");
                 Console.ReadLine();
-                break;
-
-            //Change Password Phase
-
-            case "Change Fortnite Path":
-                AnsiConsole.MarkupLine("Please enter the path to your fortnite folder");
-                string setPath = AnsiConsole.Ask<string>("Path: ");
-                string fortnitePath = Path.Combine(setPath, "FortniteGame", "Binaries", "Win64");
-
-                if (Directory.Exists(fortnitePath))
-                {
-                    Console.WriteLine(fortnitePath);
-                    File.WriteAllText(appdata + "\\path.txt", setPath);
-                    Console.Clear();
-                    AnsiConsole.MarkupLine("Path changed, you can now start the game");
-                    Main(args);
-                }
-                else
-                {
-                    Console.WriteLine(fortnitePath);
-                    AnsiConsole.MarkupLine("[red]Path is invalid![/]");
-                    Main(args);
-                }
                 break;
 
             case "Add Fortnite Version":

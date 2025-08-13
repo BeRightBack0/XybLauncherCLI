@@ -86,8 +86,17 @@ namespace XybLauncher
                 Email = email,
                 Password = password
             });
+            AnsiConsole.Clear();
 
-            AnsiConsole.MarkupLine("[bold green]New account added.[/]");
+            // Display Figlet text directly
+            AnsiConsole.Write(
+                new FigletText("XYB Launcher CLI")
+                    .Centered()
+                    .Color(Color.Blue)
+                    .Justify(Justify.Center)
+            );
+            AnsiConsole.Write(new Rule()); // Plain line
+            AnsiConsole.MarkupLine("Use the arrow keys [underline blue]UP[/] and [underline blue]DOWN[/] to navigate through the options.");
         }
 
         static void SelectAccount(AccountData accountData)

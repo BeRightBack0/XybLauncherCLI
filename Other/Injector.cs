@@ -3,8 +3,8 @@ using System.Text;
 
 namespace XybLauncher
 {
-  internal class Injector
-  {
+    internal class Injector
+    {
         public const int PROCESS_CREATE_THREAD = 2;
         public const int PROCESS_VM_OPERATION = 8;
         public const int PROCESS_VM_WRITE = 32;

@@ -18,7 +18,7 @@ namespace XybLauncher
     public class CustomArguments
     {
 
-        public readonly string _otarguments = "-epicportal -epiclocale=en-us -skippatchcheck -HTTP=WinInet -NOSSLPINNING -AUTH_PASSWORD=5001 -AUTH_LOGIN=unknown -AUTH_TYPE=exchangecode";
+        public readonly string _otarguments = "-httpproxy=127.0.0.1:3531 -epicportal -epiclocale=en-us -skippatchcheck -HTTP=WinInet -NOSSLPINNING -AUTH_PASSWORD=5001 -AUTH_LOGIN=unknown -AUTH_TYPE=exchangecode";
 
         private readonly string default_arguments = @"
         -NOSSLPINNING 
@@ -57,7 +57,7 @@ namespace XybLauncher
         -log
         -nosplash
         -nosound
-        -nullhri
+        -nullrhi
         -NOSSLPINNING 
         -epicapp=Fortnite 
         -epicenv=Prod 
